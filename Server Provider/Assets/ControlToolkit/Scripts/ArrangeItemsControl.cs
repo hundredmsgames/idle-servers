@@ -193,7 +193,12 @@ namespace ControlToolkit
 					GameObject container = (GameObject)Instantiate(ItemContainerPrefab);
 					container.transform.SetParent(placeholder.gameObject.transform, false);
 					ItemContainer itemContainer = container.GetComponent<ItemContainer>();
-					if(itemContainer == null)
+
+                    //not sure if we should do this way
+                    GameContoller.Instance.ItemContainers.Add(itemContainer);
+
+
+                    if (itemContainer == null)
 					{
 						itemContainer = container.AddComponent<ItemContainer>();
 					}

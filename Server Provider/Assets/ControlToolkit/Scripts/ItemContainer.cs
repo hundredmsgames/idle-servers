@@ -20,12 +20,14 @@ namespace ControlToolkit
 		private float m_beginMoveT;
 
 		private bool m_animate;
-		private bool m_drag;
+
+        private bool m_drag;
 		private CanvasGroup m_canvasGroup;
 		private Vector3 m_position;
 		private Vector3 m_startPosition;
 
 		private bool m_interactable = true;
+      
 		private bool m_canDrag = true;
 		private bool m_canRemove = true;
 		private bool m_canAdd = false;
@@ -43,7 +45,7 @@ namespace ControlToolkit
 				}
 			}
 		}
-
+        
 		public bool CanDrag
 		{
 			get { return m_canDrag;}

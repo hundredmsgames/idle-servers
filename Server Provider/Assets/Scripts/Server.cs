@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Server 
+public class Server
 {
+    //deneme
+    public string Name { get; set; }
+
     int level;
     int requiredLevel;
     int mps;//money per second

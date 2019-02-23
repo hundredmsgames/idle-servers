@@ -4,12 +4,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class UIDragDropController : MonoBehaviour
 {
     private int m_index;
 
+    public ScrollRect scrollRect;
+    public GameObject dragEnabledScreen;
+
     [SerializeField] ArrangeItemsControl ArrangeItemsControl;
+    List<ItemDataBindingEventArgs> allItems;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,11 +23,11 @@ public class UIDragDropController : MonoBehaviour
         ArrangeItemsControl.ItemAdd += OnItemsAdd;
         ArrangeItemsControl.ItemRemoving += OnItemRemoving;
         ArrangeItemsControl.ItemRemoved += OnItemRemoved;
-
-
+        allItems = new List<ItemDataBindingEventArgs>();
+        
         IList items = new ArrayList();
         for (int i = 0; i < 38; i++)
-            items.Add(new Server());
+            items.Add(new Server() { Name=i.ToString() });
 
 
 
@@ -47,7 +52,7 @@ public class UIDragDropController : MonoBehaviour
 
     private void OnItemsArranged(object sender, EventArgs e)
     {
-
+        
     }
 
     private void OnItemDataBinding(object sender, ItemDataBindingEventArgs e)
@@ -55,15 +60,35 @@ public class UIDragDropController : MonoBehaviour
         Server dataItem = e.Item as Server;
         if (dataItem != null)
         {
-            Image image = e.ItemPresenter.GetComponentInChildren<Image>();
+            TextMeshProUGUI tmp = e.ItemPresenter.GetComponentInChildren<TextMeshProUGUI>();
+            
+            tmp.text = dataItem.Name;
 
+            Image image = e.ItemPresenter.GetComponentInChildren<Image>();
+            e.CanDrag = false;
             Sprite sprite = Resources.Load<Sprite>("server");
             image.sprite = sprite;
+
+            allItems.Add(e);
 
 
         }
     }
-
+    public  void DragEnable()
+    {
+        bool scrollEnabledisable = false;
+        foreach (ItemContainer item in GameContoller.Instance.ItemContainers)
+        {
+            item.CanDrag = !item.CanDrag;
+            scrollEnabledisable = !item.CanDrag;
+            Debug.Log(item.CanDrag);
+        }
+        scrollRect.vertical = scrollEnabledisable;
+        if (scrollRect.vertical == false)
+            dragEnabledScreen.GetComponent<Image>().color = Color.green;
+        else
+            dragEnabledScreen.GetComponent<Image>().color = Color.white;
+    }
     // Update is called once per frame
     void Update()
     {
