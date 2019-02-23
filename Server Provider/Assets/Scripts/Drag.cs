@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Drag : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler
+public class Drag : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUpHandler, IDropHandler
 {
     private GameObject draggingOriginal;
     private GameObject draggingClone;
@@ -12,7 +12,7 @@ public class Drag : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUp
     GraphicRaycaster m_Raycaster;
     PointerEventData m_PointerEventData;
     EventSystem m_EventSystem;
-
+    bool dragging = false;
     void Start()
     {
         //Fetch the Raycaster from the GameObject (the Canvas)
@@ -65,6 +65,7 @@ public class Drag : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUp
     {
         if (draggingClone != null)
             SetDraggedPosition(data);
+
     }
 
     private void SetDraggedPosition(PointerEventData data)
@@ -77,12 +78,17 @@ public class Drag : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUp
             rt.position = globalMousePos;
             rt.rotation = draggingClone.transform.rotation;
         }
+        dragging = true;
     }
 
     public void OnPointerUp(PointerEventData pointerEventData)
     {
-        if (draggingClone != null)
-            Destroy(draggingClone);
+        if (dragging == false)
+        {
+            Debug.Log("pointer up?");
+            if (draggingClone != null)
+                Destroy(draggingClone);
+        }
     }
 
     static public T FindInParents<T>(GameObject go) where T : Component
@@ -101,5 +107,12 @@ public class Drag : MonoBehaviour, IDragHandler, IPointerDownHandler, IPointerUp
         }
         return comp;
     }
-}
 
+    public void OnDrop(PointerEventData eventData)
+    {
+        Debug.Log("pointer up?");
+        dragging = false;
+        if (draggingClone != null)
+            Destroy(draggingClone);
+    }
+}
