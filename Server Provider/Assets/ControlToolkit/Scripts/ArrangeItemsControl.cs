@@ -159,6 +159,11 @@ namespace ControlToolkit
 				}
 			}
 		}
+
+        public void SetupServer(ItemPlaceholder itemPlaceholder)
+        {
+            //when we setup a server this function handles the setup
+        }
 		
 		private void DataBind()
 		{
@@ -195,7 +200,7 @@ namespace ControlToolkit
 					ItemContainer itemContainer = container.GetComponent<ItemContainer>();
 
                     //not sure if we should do this way
-                    GameContoller.Instance.ItemContainers.Add(itemContainer);
+                   GameContoller.Instance.ItemContainers.Add(itemContainer);
 
 
                     if (itemContainer == null)

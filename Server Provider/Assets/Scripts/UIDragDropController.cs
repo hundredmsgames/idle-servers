@@ -25,14 +25,6 @@ public class UIDragDropController : MonoBehaviour
         ArrangeItemsControl.ItemRemoved += OnItemRemoved;
         allItems = new List<ItemDataBindingEventArgs>();
         
-        IList items = new ArrayList();
-        for (int i = 0; i < 38; i++)
-            items.Add(new Server() { Name=i.ToString() });
-
-
-
-
-        ArrangeItemsControl.Items = items;
     }
 
     private void OnItemRemoved(object sender, ItemRemovedEventArgs e)
