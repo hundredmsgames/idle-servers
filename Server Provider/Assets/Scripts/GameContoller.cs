@@ -50,8 +50,12 @@ public class GameContoller : MonoBehaviour
         money = money - shelfPrice;
         //update shelfprice
         shelfCount++;
+
+        // https://answers.unity.com/questions/1276433/get-layoutgroup-and-contentsizefitter-to-update-th.html
+        // Content size fitter doesn't update content of grid layout. This is a workaround for it.
+        LayoutRebuilder.ForceRebuildLayoutImmediate(shelfGridTransform as RectTransform);
     }
- 
+
 
     // Update is called once per frame
     void Update()
