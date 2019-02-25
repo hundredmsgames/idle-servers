@@ -41,7 +41,7 @@ public class GameContoller : MonoBehaviour
         {
 
             GameObject placeHolderGO = (GameObject)Instantiate(placeholderPrefab);
-            placeHolderGO.transform.SetParent(shelfGridTransform);
+            placeHolderGO.transform.SetParent(shelfGridTransform, false);
             ItemPlaceholder placeholder = placeHolderGO.GetComponent<ItemPlaceholder>();
             placeholders[i] = placeholder;
 
