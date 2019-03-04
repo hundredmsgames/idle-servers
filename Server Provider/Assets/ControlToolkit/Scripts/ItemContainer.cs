@@ -16,6 +16,7 @@ namespace ControlToolkit
 
 		public static EventHandler Add;
 
+        // ADDED
         public delegate void ClickHandler(ItemContainer container,PointerEventData pointerEventData);
         public event ClickHandler OnClick;
 
@@ -111,8 +112,10 @@ namespace ControlToolkit
 		
 		void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
 		{
+            // ADDED 
             if (OnClick != null)
                 OnClick(this, eventData);
+
 			if(!m_canDrag)
 			{
 				return;
