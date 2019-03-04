@@ -68,8 +68,9 @@ public class UIDragDropController : MonoBehaviour
     }
     public  void DragEnable()
     {
+       // Debug.Log("basıldı");
         bool scrollEnabledisable = false;
-        foreach (ItemContainer item in GameContoller.Instance.ItemContainers)
+        foreach (ItemContainer item in GameContoller.Instance.ItemContainerToGO.Keys)
         {
             item.CanDrag = !item.CanDrag;
             scrollEnabledisable = !item.CanDrag;

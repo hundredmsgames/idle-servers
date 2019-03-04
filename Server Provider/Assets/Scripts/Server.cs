@@ -13,16 +13,23 @@ public class Server
     int ramSize;
 
     float cpuSpeed;
-    bool active=false;
+    bool active = false;
     string spriteName;
     int levelStart = 1;
-    int maxLevel=10;
+    int maxLevel = 10;
     bool setupNewServer = true;
-    bool featurePointActive=true;
+    bool featurePointActive = true;
     int currentFeaturePoints = 3;
 
+    public bool plantable = false;
+    public bool upgradeable = false;
     public delegate void LevelUpHandler(int level);
     public event LevelUpHandler LeveledUp;
+
+    public delegate void ServerEventsHandler(Server server);
+    public event ServerEventsHandler Plant;
+    public event ServerEventsHandler Planted;
+    public event ServerEventsHandler Upgraded;
 
     //every second this server produces money
     public int ProduceMoney()
@@ -49,7 +56,7 @@ public class Server
     }
     public void AddRam()
     {
-        ramSize+=2;
+        ramSize += 2;
         //production level changes so recalculate mps(money per second)
     }
     public void AddCpuSpeed()
@@ -57,6 +64,25 @@ public class Server
         cpuSpeed += 0.1f;
         //production level changes so recalculate mps(money per second)
     }
-  
     
+    public void UpgradeServer()
+    {
+        if (Upgraded != null)
+            Upgraded(this);
+
+    }
+    public void PlantServer()
+    {
+        if (Plant != null)
+            Plant(this);
+    }
+    public void PlantedServer()
+    {
+        if (Planted != null)
+            Planted(this);
+    }
+    //we need to tell to upgradeable & plantable objects to what to do
+    //Plant || Upgrade
+    //does server need to know how to do this? how are we gonna do it? figure it out?
+
 }

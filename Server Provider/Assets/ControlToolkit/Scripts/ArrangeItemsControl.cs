@@ -200,8 +200,8 @@ namespace ControlToolkit
 					ItemContainer itemContainer = container.GetComponent<ItemContainer>();
 
                     //not sure if we should do this way
-                   GameContoller.Instance.ItemContainers.Add(itemContainer);
-
+                    // GameContoller.Instance.ItemContainers.Add(itemContainer);
+                    Debug.Log("ArrangeItemsControl::Databind::Burasý çalýþýyor");
 
                     if (itemContainer == null)
 					{

@@ -16,6 +16,9 @@ namespace ControlToolkit
 
 		public static EventHandler Add;
 
+        public delegate void ClickHandler(ItemContainer container,PointerEventData pointerEventData);
+        public event ClickHandler OnClick;
+
 		public float MoveDuration = 0.2f;
 		private float m_beginMoveT;
 
@@ -108,6 +111,8 @@ namespace ControlToolkit
 		
 		void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
 		{
+            if (OnClick != null)
+                OnClick(this, eventData);
 			if(!m_canDrag)
 			{
 				return;
