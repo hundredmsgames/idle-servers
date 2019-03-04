@@ -47,6 +47,8 @@ public class ServerController : MonoBehaviour
 
         GameObject serverGO = Instantiate(serverPrefab);
         serverGO.transform.SetParent(GameContoller.Instance.ItemContainerToGO[container].transform,false);
+        serverGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
+
         //serverGO.GetComponent<RectTransform>().rect.Set(0, 0, 0, 0);
         serverGO.GetComponentInChildren<TextMeshProUGUI>().text = selectedServer.Name;
 

@@ -14,7 +14,7 @@ public class Server
 
     float cpuSpeed;
     bool active = false;
-    string spriteName;
+    public string spriteName;
     int levelStart = 1;
     int maxLevel = 10;
     bool setupNewServer = true;

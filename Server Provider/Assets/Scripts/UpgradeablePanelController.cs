@@ -11,9 +11,11 @@ public class UpgradeablePanelController : MonoBehaviour
     AnimationsController animationsController;
 
     Server[] servers;
+
     // Start is called before the first frame update
     void Start()
     {
+
         animationsController = AnimationsController.Instance;
         servers = GameContoller.Instance.PlantableServerList.ToArray();
         foreach (Server server in servers)
@@ -22,6 +24,7 @@ public class UpgradeablePanelController : MonoBehaviour
             upgradeableGO.transform.SetParent(parentObjectTransform, false);
 
             upgradeableGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = server.Name;
+            upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\"+server.spriteName);
             upgradeableGO.GetComponentInChildren<Button>().onClick.AddListener(()=>{ Plant(server); });
             //we need to set behaviour of this upgradeable or plantable server objects
             //for example is this object active?

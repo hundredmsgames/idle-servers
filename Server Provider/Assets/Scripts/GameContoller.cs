@@ -43,7 +43,7 @@ public class GameContoller : MonoBehaviour
         Server server;
         for (int i = 0; i < 8; i++)
         {
-             server = new Server() { Name = "Server"+i, plantable = true, upgradeable = false };
+             server = new Server() { Name = "Server"+i, plantable = true, upgradeable = false, spriteName="Computer"+i%5 };
             PlantableServerList.Add(server);
         }
 

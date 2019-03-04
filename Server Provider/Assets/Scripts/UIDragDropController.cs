@@ -74,7 +74,7 @@ public class UIDragDropController : MonoBehaviour
         {
             item.CanDrag = !item.CanDrag;
             scrollEnabledisable = !item.CanDrag;
-            Debug.Log(item.CanDrag);
+            //Debug.Log(item.CanDrag);
         }
         scrollRect.vertical = scrollEnabledisable;
         if (scrollRect.vertical == false)
