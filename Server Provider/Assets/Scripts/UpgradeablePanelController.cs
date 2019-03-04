@@ -19,7 +19,7 @@ public class UpgradeablePanelController : MonoBehaviour
         foreach (Server server in servers)
         {
             GameObject upgradeableGO = Instantiate(upgradeablePrefab);
-            upgradeableGO.transform.SetParent(parentObjectTransform);
+            upgradeableGO.transform.SetParent(parentObjectTransform, false);
 
             upgradeableGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = server.Name;
             upgradeableGO.GetComponentInChildren<Button>().onClick.AddListener(()=>{ Plant(server); });
