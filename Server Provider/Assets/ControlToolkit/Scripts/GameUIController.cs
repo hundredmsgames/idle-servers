@@ -19,14 +19,14 @@ public class GameUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentshelfpriceText.text ="Unluck " + SIPrefix.GetInfo(GameContoller.Instance.shelfPrice,1).AmountWithPrefix;
-        currentMoneyText.text = SIPrefix.GetInfo(GameContoller.Instance.money, 1).AmountWithPrefix ;
-        filledImage.fillAmount = GameContoller.Instance.levelProgress;
-        currentLevel.text ="Level "+ GameContoller.Instance.level.ToString() ;
+        currentshelfpriceText.text ="Unluck " + SIPrefix.GetInfo(GameController.Instance.shelfPrice,1).AmountWithPrefix;
+        currentMoneyText.text = SIPrefix.GetInfo(GameController.Instance.money, 1).AmountWithPrefix ;
+        filledImage.fillAmount = GameController.Instance.levelProgress;
+        currentLevel.text ="Level "+ GameController.Instance.level.ToString() ;
     }
     public void UnlockShelf()
     {
-        GameContoller.Instance.UnlockShelf();
+        GameController.Instance.UnlockShelf();
         
     }
 }

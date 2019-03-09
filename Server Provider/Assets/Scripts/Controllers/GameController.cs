@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameContoller : MonoBehaviour
+public class GameController : MonoBehaviour
 {
-    public static GameContoller Instance;
+    public static GameController Instance;
     // Start is called before the first frame update
     //every row(shelf) has 4 tiles
     int serverCountInRow = 4;
@@ -16,6 +16,9 @@ public class GameContoller : MonoBehaviour
 
     public Dictionary<Server, GameObject> plantedServersToGOs;
 
+    public Transform moneyTextContainer;
+
+    public GameObject moneyTextPrefab;
     public GameObject placeholderPrefab;
     public GameObject itemcontainerPrefab;
     public Transform shelfGridTransform;
@@ -109,20 +112,18 @@ public class GameContoller : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(shelfGridTransform as RectTransform);
     }
 
-    float time = 0;
+    float time = 0f;
     // Update is called once per frame
     void Update()
     {
         time += Time.deltaTime;
 
-        if (time >= 1)
+        if (time >= 1f)
         {
-
-            time = 0;
+            time = 0f;
             foreach (Server server in plantedServersToGOs.Keys)
             {
                 server.Update();
-
             }
         }
     }
@@ -131,6 +132,12 @@ public class GameContoller : MonoBehaviour
     {
         //earn money
         money += server.ProduceMoney();
+
+        // create a money text
+        GameObject moneyText = Instantiate(moneyTextPrefab);
+        moneyText.transform.SetParent(moneyTextContainer, false);
+
+        moneyText.transform.position = plantedServersToGOs[server].transform.position + Vector3.up * 20f;
 
         //level progress
         //FIXME : 0.01 is hard coded turn it to a variable and change the value with power ups

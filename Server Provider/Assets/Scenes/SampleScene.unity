@@ -261,6 +261,7 @@ RectTransform:
   m_Children:
   - {fileID: 772749709}
   - {fileID: 1183689795}
+  - {fileID: 632790618}
   - {fileID: 1274649194}
   m_Father: {fileID: 1153163204}
   m_RootOrder: 0
@@ -1678,6 +1679,41 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &632790617
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 632790618}
+  m_Layer: 5
+  m_Name: MoneyTextContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &632790618
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 632790617}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 73413294}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -647, y: 50}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &697503620
 GameObject:
   m_ObjectHideFlags: 0
@@ -1712,7 +1748,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00000736367}
+  m_AnchoredPosition: {x: 0, y: 0.00010798106}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &697503622
@@ -2385,6 +2421,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27adaf4bc271715418c48d2fa35dd950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneyTextContainer: {fileID: 632790618}
+  moneyTextPrefab: {fileID: 4249227637495638497, guid: b32632cced0910e488d16d34c2cf3b0c,
+    type: 3}
   placeholderPrefab: {fileID: 177002, guid: 429cf83408822554ba6a9a22ea1b5a0f, type: 3}
   itemcontainerPrefab: {fileID: 123714, guid: 36c89ef912cc358488246dcd1834eba5, type: 3}
   shelfGridTransform: {fileID: 1334878505}
@@ -2993,7 +3032,7 @@ RectTransform:
   - {fileID: 1127459878}
   - {fileID: 893729292}
   m_Father: {fileID: 73413294}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

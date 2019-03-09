@@ -17,7 +17,7 @@ public class UpgradeablePanelController : MonoBehaviour
     {
 
         animationsController = AnimationsController.Instance;
-        servers = GameContoller.Instance.PlantableServerList.ToArray();
+        servers = GameController.Instance.PlantableServerList.ToArray();
         foreach (Server server in servers)
         {
             GameObject upgradeableGO = Instantiate(upgradeablePrefab);
@@ -51,7 +51,7 @@ public class UpgradeablePanelController : MonoBehaviour
         //then it will work
         copy.PlantServer();
         animationsController.UpgradesOpenCloseAnim(false);
-        GameContoller.Instance.plantedServersToGOs.Add(copy, null);
+        GameController.Instance.plantedServersToGOs.Add(copy, null);
     }
     public void Upgrade(Server server)
     {
