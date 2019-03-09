@@ -14,26 +14,35 @@ public class GameContoller : MonoBehaviour
 
     public List<Server> PlantableServerList { get; protected set; }
 
+    public Dictionary<Server, GameObject> plantedServersToGOs;
+
     public GameObject placeholderPrefab;
     public GameObject itemcontainerPrefab;
     public Transform shelfGridTransform;
 
     List<Server[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
-    public Dictionary<ItemContainer,GameObject> ItemContainerToGO;
+    public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
 
     //Game Logic Variables
     int shelfCount = 1;
     public int shelfPrice = 1000;
     public int money = 9999;
-
+    public float levelProgress = 0;
+    public int level = 1;
+    public Server plantingServer=null;
 
     private void OnEnable()
     {
         if (Instance == null)
             Instance = this;
         shelves = new List<Server[]>();
+        //instantiate plantable server list
         PlantableServerList = new List<Server>();
+        //instantiate planted servers to game object dictionary
+        //this will store all server models that planted and link them to the game objects in the game
+        plantedServersToGOs = new Dictionary<Server, GameObject>();
+
         ItemContainerToGO = new Dictionary<ItemContainer, GameObject>();
         CreatePlantableServers();
     }
@@ -43,7 +52,7 @@ public class GameContoller : MonoBehaviour
         Server server;
         for (int i = 0; i < 8; i++)
         {
-             server = new Server() { Name = "Server"+i, plantable = true, upgradeable = false, spriteName="Computer"+i%5 };
+            server = new Server() { Name = "Server" + i, plantable = true, upgradeable = false, spriteName = "Computer" + i % 5, mps = 100 * (i + 1) };
             PlantableServerList.Add(server);
         }
 
@@ -63,11 +72,13 @@ public class GameContoller : MonoBehaviour
             itemcontainerGO.transform.SetParent(placeHolderGO.transform, false);
             ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
             itemContainer.CanDrag = false;
-            ItemContainerToGO.Add(itemContainer,itemcontainerGO);
+            ItemContainerToGO.Add(itemContainer, itemcontainerGO);
         }
     }
     public void UnlockShelf()
     {
+        if (money - shelfPrice < 0)
+            return;
         ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
         for (int i = 0; i < serverCountInRow; i++)
         {
@@ -81,11 +92,16 @@ public class GameContoller : MonoBehaviour
             ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
             itemContainer.CanDrag = false;
             ItemContainerToGO.Add(itemContainer, itemcontainerGO);
-            
+            if(plantingServer != null)
+            {
+                plantingServer.PlantServer();
+            }
+
         }
         //
         money = money - shelfPrice;
         //update shelfprice
+        shelfPrice += 1000;
         shelfCount++;
 
         // https://answers.unity.com/questions/1276433/get-layoutgroup-and-contentsizefitter-to-update-th.html
@@ -93,11 +109,37 @@ public class GameContoller : MonoBehaviour
         LayoutRebuilder.ForceRebuildLayoutImmediate(shelfGridTransform as RectTransform);
     }
 
-
+    float time = 0;
     // Update is called once per frame
     void Update()
     {
+        time += Time.deltaTime;
 
+        if (time >= 1)
+        {
+
+            time = 0;
+            foreach (Server server in plantedServersToGOs.Keys)
+            {
+                server.Update();
+
+            }
+        }
+    }
+
+    public void ServerUpdate(Server server)
+    {
+        //earn money
+        money += server.ProduceMoney();
+
+        //level progress
+        //FIXME : 0.01 is hard coded turn it to a variable and change the value with power ups
+        levelProgress += 0.01f;
+        if (levelProgress >= 1)
+        {
+            level++;
+            levelProgress = 0;
+        }
     }
 
 

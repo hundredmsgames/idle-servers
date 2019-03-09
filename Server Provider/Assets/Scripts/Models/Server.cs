@@ -9,7 +9,7 @@ public class Server
 
     int level;
     int requiredLevel;
-    int mps;//money per second
+    public int mps;//money per second
     int ramSize;
 
     float cpuSpeed;
@@ -18,11 +18,15 @@ public class Server
     int levelStart = 1;
     int maxLevel = 10;
     bool setupNewServer = true;
+
+    //özellik puanları server leve atladıkça bunlardan kazanır ve geliştirmeler için kullanılır
     bool featurePointActive = true;
     int currentFeaturePoints = 3;
 
     public bool plantable = false;
     public bool upgradeable = false;
+
+    public static uint MaxProductionTime = 1;
     public delegate void LevelUpHandler(int level);
     public event LevelUpHandler LeveledUp;
 
@@ -30,6 +34,22 @@ public class Server
     public event ServerEventsHandler Plant;
     public event ServerEventsHandler Planted;
     public event ServerEventsHandler Upgraded;
+    public event ServerEventsHandler UpdateEvent;
+
+
+
+    public Server Copy()
+    {
+        Server copy = new Server() { active=this.active, cpuSpeed=this.cpuSpeed, upgradeable=this.upgradeable, spriteName=this.spriteName, mps=this.mps, currentFeaturePoints=this.currentFeaturePoints, featurePointActive=this.featurePointActive, level=this.level, levelStart=this.levelStart, maxLevel=this.maxLevel, Name=this.Name, plantable=this.plantable, ramSize=this.ramSize, requiredLevel=this.requiredLevel, setupNewServer=this.setupNewServer  };
+        //get the events
+        copy.UpdateEvent = this.UpdateEvent;
+        copy.Upgraded = this.Upgraded;
+        copy.Planted = this.Planted;
+        copy.Plant = this.Plant;
+        copy.LeveledUp = this.LeveledUp;
+
+        return copy;
+    }
 
     //every second this server produces money
     public int ProduceMoney()
@@ -64,22 +84,24 @@ public class Server
         cpuSpeed += 0.1f;
         //production level changes so recalculate mps(money per second)
     }
-    
+
     public void UpgradeServer()
     {
-        if (Upgraded != null)
-            Upgraded(this);
+        Upgraded?.Invoke(this);
 
     }
     public void PlantServer()
     {
-        if (Plant != null)
-            Plant(this);
+        Plant?.Invoke(this);
     }
     public void PlantedServer()
     {
-        if (Planted != null)
-            Planted(this);
+        Planted?.Invoke(this);
+    }
+
+    public void Update()
+    {
+        UpdateEvent?.Invoke(this);
     }
     //we need to tell to upgradeable & plantable objects to what to do
     //Plant || Upgrade

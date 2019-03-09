@@ -42,13 +42,16 @@ public class UpgradeablePanelController : MonoBehaviour
     public void Plant(Server server)
     {
         Debug.Log(server.Name + "plant active");
-        server.plantable = false;
-        server.upgradeable = true;
+
+        Server copy = server.Copy();
+        copy.plantable = false;
+        copy.upgradeable = true;
         //this doesnt work yet
         //we will add events to server about how to behave when this happen 
         //then it will work
-        server.PlantServer();
+        copy.PlantServer();
         animationsController.UpgradesOpenCloseAnim(false);
+        GameContoller.Instance.plantedServersToGOs.Add(copy, null);
     }
     public void Upgrade(Server server)
     {

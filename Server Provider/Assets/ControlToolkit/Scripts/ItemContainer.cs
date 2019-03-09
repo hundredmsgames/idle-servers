@@ -16,6 +16,8 @@ namespace ControlToolkit
 
 		public static EventHandler Add;
 
+        public bool hasServer = false;
+
         // ADDED
         public delegate void ClickHandler(ItemContainer container,PointerEventData pointerEventData);
         public event ClickHandler OnClick;
