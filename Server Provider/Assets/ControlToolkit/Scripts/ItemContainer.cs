@@ -51,7 +51,11 @@ namespace ControlToolkit
 				}
 			}
 		}
-        
+        public bool IsClickable
+        {
+            get { return OnClick != null; }
+        }
+
 		public bool CanDrag
 		{
 			get { return m_canDrag;}
@@ -90,7 +94,7 @@ namespace ControlToolkit
 		void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
 		{
             
-			if(!m_canDrag)
+			if(!m_canDrag || !hasServer)
 			{
 				return;
 			}

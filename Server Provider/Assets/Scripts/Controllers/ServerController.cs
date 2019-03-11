@@ -41,12 +41,15 @@ public class ServerController : MonoBehaviour
         {
             if (itemContainer.hasServer == false)
             {
+
+                
+
                 Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
                 image.sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
                 image.color = new Color(0, 0, 0, 0.1f);
                 // GameContoller.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>().SetNativeSize();
-
-                itemContainer.OnClick += ItemContainer_OnClick;
+                if(itemContainer.IsClickable == false)
+                    itemContainer.OnClick += ItemContainer_OnClick;
             }
         }
         GameController.Instance.plantingServer = selectedServer;

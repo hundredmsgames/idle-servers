@@ -31,7 +31,7 @@ public class MoneyText : MonoBehaviour
         if (timer < randomWaitTime)
             return;
 
-        transform.Translate(0f, 0.5f, 0f);
+        transform.Translate(0f, 2f, 0f);
         if (timer < randomWaitTime + fadeInTime)
         {
             icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, icon.color.a + 0.04f);

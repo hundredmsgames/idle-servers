@@ -8,7 +8,7 @@ public class Server
     public string Name { get; set; }
 
     int level;
-    int requiredLevel;
+    public int requiredLevel;
     public int mps;//money per second
     int ramSize;
 
@@ -87,6 +87,8 @@ public class Server
 
     public void UpgradeServer()
     {
+        mps += 100;
+
         Upgraded?.Invoke(this);
 
     }

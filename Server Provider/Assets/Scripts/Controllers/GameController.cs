@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,13 +28,16 @@ public class GameController : MonoBehaviour
     List<ItemPlaceholder[]> itemPlaceholders;
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
 
+    public delegate void LevelHandler(int level);
+    public event LevelHandler LeveledUp;
+
     //Game Logic Variables
     int shelfCount = 1;
     public int shelfPrice = 1000;
     public int money = 9999;
     public float levelProgress = 0;
     public int level = 1;
-    public Server plantingServer=null;
+    public Server plantingServer = null;
 
     private void OnEnable()
     {
@@ -55,7 +59,7 @@ public class GameController : MonoBehaviour
         Server server;
         for (int i = 0; i < 8; i++)
         {
-            server = new Server() { Name = "Server" + i, plantable = true, upgradeable = false, spriteName = "Computer" + i % 5, mps = 100 * (i + 1) };
+            server = new Server() { Name = "Server" + i, plantable = true, upgradeable = false, spriteName = "Computer" + i % 5, mps = 100 * (i + 1), requiredLevel = (2 * i + 1) };
             PlantableServerList.Add(server);
         }
 
@@ -95,7 +99,7 @@ public class GameController : MonoBehaviour
             ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
             itemContainer.CanDrag = false;
             ItemContainerToGO.Add(itemContainer, itemcontainerGO);
-            if(plantingServer != null)
+            if (plantingServer != null)
             {
                 plantingServer.PlantServer();
             }
@@ -133,18 +137,21 @@ public class GameController : MonoBehaviour
         //earn money
         money += server.ProduceMoney();
 
-        // create a money text
-        GameObject moneyText = Instantiate(moneyTextPrefab);
-        moneyText.transform.SetParent(moneyTextContainer, false);
+        // create a money text game object
+        GameObject moneyTextGO = Instantiate(moneyTextPrefab);
+        moneyTextGO.transform.SetParent(moneyTextContainer, false);
 
-        moneyText.transform.position = plantedServersToGOs[server].transform.position + Vector3.up * 20f;
+        moneyTextGO.transform.position = plantedServersToGOs[server].transform.position + Vector3.up * 40f;
+
+        moneyTextGO.GetComponentInChildren<TextMeshProUGUI>().text = server.mps.ToString();
 
         //level progress
         //FIXME : 0.01 is hard coded turn it to a variable and change the value with power ups
-        levelProgress += 0.01f;
+        levelProgress += 0.1f;//(float)(1 / Math.Pow(10, level + 1));
         if (levelProgress >= 1)
         {
             level++;
+            LeveledUp?.Invoke(level);
             levelProgress = 0;
         }
     }
