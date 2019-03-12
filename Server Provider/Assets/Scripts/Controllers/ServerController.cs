@@ -9,9 +9,11 @@ public class ServerController : MonoBehaviour
 {
     public GameObject serverPrefab;
     // Start is called before the first frame update
-     Server selectedServer;
+    Server selectedServer;
+    Dictionary<ItemContainer, GameObject> itemcontainerToGO;
     void Start()
     {
+        itemcontainerToGO = GameController.Instance.ItemContainerToGO;
         foreach (Server server in GameController.Instance.PlantableServerList)
         {
             server.Plant += Server_Plant;
@@ -21,35 +23,47 @@ public class ServerController : MonoBehaviour
 
     private void Server_Planted(Server server)
     {
-      //  Debug.Log("ServerController::Server_Plant " + server.Name);
+        //  Debug.Log("ServerController::Server_Plant " + server.Name);
         foreach (ItemContainer itemContainer in GameController.Instance.ItemContainerToGO.Keys)
         {
             Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
             image.sprite = null;
             image.color = new Color(0, 0, 0, 0);
             itemContainer.OnClick -= ItemContainer_OnClick;
+            if (itemContainer.hasServer)
+                itemContainer.OnClick += ClickOnServer;
         }
         selectedServer = null;
         GameController.Instance.plantingServer = null;
     }
 
+    private void ClickOnServer(ItemContainer container, UnityEngine.EventSystems.PointerEventData pointerEventData)
+    {
+        GameController.Instance.ItemContainerToServer[container].Update();
+    }
+
+
+
     private void Server_Plant(Server server)
     {
         selectedServer = server;
         Debug.Log("ServerController::Server_Plant " + server.Name);
-        foreach (ItemContainer itemContainer in GameController.Instance.ItemContainerToGO.Keys)
+        foreach (ItemContainer itemContainer in itemcontainerToGO.Keys)
         {
             if (itemContainer.hasServer == false)
             {
-
-                
-
                 Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
                 image.sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
                 image.color = new Color(0, 0, 0, 0.1f);
                 // GameContoller.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>().SetNativeSize();
-                if(itemContainer.IsClickable == false)
+                if (itemContainer.IsClickable == false)
                     itemContainer.OnClick += ItemContainer_OnClick;
+
+            }
+            else
+            {
+                //if item container has server then it means it has a click event on it we dont wanna update server while planting
+                itemContainer.OnClick -= ClickOnServer;
             }
         }
         GameController.Instance.plantingServer = selectedServer;
@@ -60,7 +74,7 @@ public class ServerController : MonoBehaviour
         Debug.Log("ServerController::ItemContainer_OnClick ::PLANTED" + pointerEventData.position);
 
         GameObject serverGO = Instantiate(serverPrefab);
-        serverGO.transform.SetParent(GameController.Instance.ItemContainerToGO[container].transform,false);
+        serverGO.transform.SetParent(itemcontainerToGO[container].transform, false);
         serverGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
 
         //serverGO.GetComponent<RectTransform>().rect.Set(0, 0, 0, 0);
@@ -72,6 +86,7 @@ public class ServerController : MonoBehaviour
         GameController.Instance.plantedServersToGOs[selectedServer] = serverGO;
 
         container.hasServer = true;
+        GameController.Instance.ItemContainerToServer[container] = selectedServer;
         //after server planted selected server gets set to null so be carefull where you do this
         selectedServer.PlantedServer();
 
@@ -80,6 +95,6 @@ public class ServerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

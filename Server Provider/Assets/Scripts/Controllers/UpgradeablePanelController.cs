@@ -70,7 +70,7 @@ public class UpgradeablePanelController : MonoBehaviour
     public void Plant(object sender, Server server)
     {
         Debug.Log(server.Name + "plant active");
-
+        
         GameObject upgradeableGO = (GameObject)sender;
 
         Server copy = server.Copy();
@@ -95,27 +95,42 @@ public class UpgradeablePanelController : MonoBehaviour
             if (server.Name == servers.Name)
             {
                 Transform buttonTransform = servers2buttonsInUpgradeablePanels[servers].gameObject.transform;
-                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade";
+                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + SIPrefix.GetInfo(server.requiredMoneyForUpgrade,1).AmountWithPrefix;
                 Button btn = buttonTransform.GetComponent<Button>();
                 btn.onClick.RemoveAllListeners();
                 btn.onClick.AddListener(() => { UpgradeServer(servers2buttonsInUpgradeablePanels[servers], server); });
             }
         }
+
     }
 
     private void UpgradeServer(object sender, Server server)
     {
         Debug.Log(server.Name + " UpgradeablePanelController::Server Upgrade");
+        if (GameController.Instance.money - server.requiredMoneyForUpgrade < 0)
+            return;
+
+        GameController.Instance.money -= server.requiredMoneyForUpgrade;
+        
+        server.Upgraded += Server_Upgraded;
         server.UpgradeServer();
-        //GameController.Instance.money -= server.ProduceMoney();    
+           
     }
 
-    
-
-    public void Upgrade(Server server)
+    private void Server_Upgraded(Server server)
     {
-
+        foreach (Server servers in servers2buttonsInUpgradeablePanels.Keys)
+        {
+            if (server.Name == servers.Name)
+            {
+                Transform buttonTransform = servers2buttonsInUpgradeablePanels[servers].gameObject.transform;
+                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + SIPrefix.GetInfo(server.requiredMoneyForUpgrade,1).AmountWithPrefix;
+            }
+        }
+        
     }
+
+
     // Update is called once per frame
     void Update()
     {

@@ -7,9 +7,10 @@ public class Server
     //deneme
     public string Name { get; set; }
 
-    int level;
+    public int serverlevel=1;
     public int requiredLevel;
     public int mps;//money per second
+    public int requiredMoneyForUpgrade;
     int ramSize;
 
     float cpuSpeed;
@@ -40,7 +41,8 @@ public class Server
 
     public Server Copy()
     {
-        Server copy = new Server() { active=this.active, cpuSpeed=this.cpuSpeed, upgradeable=this.upgradeable, spriteName=this.spriteName, mps=this.mps, currentFeaturePoints=this.currentFeaturePoints, featurePointActive=this.featurePointActive, level=this.level, levelStart=this.levelStart, maxLevel=this.maxLevel, Name=this.Name, plantable=this.plantable, ramSize=this.ramSize, requiredLevel=this.requiredLevel, setupNewServer=this.setupNewServer  };
+        Server copy = new Server() { active=this.active, cpuSpeed=this.cpuSpeed, upgradeable=this.upgradeable, spriteName=this.spriteName, mps=this.mps, currentFeaturePoints=this.currentFeaturePoints, featurePointActive=this.featurePointActive, serverlevel=this.serverlevel, levelStart=this.levelStart, maxLevel=this.maxLevel, Name=this.Name, plantable=this.plantable, ramSize=this.ramSize, requiredLevel=this.requiredLevel, setupNewServer=this.setupNewServer , requiredMoneyForUpgrade=this.requiredMoneyForUpgrade };
+        
         //get the events
         copy.UpdateEvent = this.UpdateEvent;
         copy.Upgraded = this.Upgraded;
@@ -59,16 +61,14 @@ public class Server
 
     public void LevelUp()
     {
-        level++;
-        if (level >= maxLevel)
+        serverlevel++;
+        if (serverlevel >= maxLevel)
             setupNewServer = true;
         else
         {
-            currentFeaturePoints += 3;
-            featurePointActive = true;
-
-            LeveledUp(level);
+            LeveledUp(serverlevel);
         }
+       
         //when we reach to the max then we can plant(setup) new server and reference to it
         //figure it out
 
@@ -87,9 +87,11 @@ public class Server
 
     public void UpgradeServer()
     {
+        serverlevel++;
         mps += 100;
-
+        requiredMoneyForUpgrade = 100 * serverlevel;
         Upgraded?.Invoke(this);
+      
 
     }
     public void PlantServer()

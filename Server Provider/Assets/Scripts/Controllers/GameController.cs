@@ -27,6 +27,7 @@ public class GameController : MonoBehaviour
     List<Server[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
+    public Dictionary<ItemContainer, Server> ItemContainerToServer;
 
     public delegate void LevelHandler(int level);
     public event LevelHandler LeveledUp;
@@ -38,6 +39,10 @@ public class GameController : MonoBehaviour
     public float levelProgress = 0;
     public int level = 1;
     public Server plantingServer = null;
+    //whenever we use a power up we can set this multiplier to any power of 10
+    float levelProgressMultiplier=1;
+    float levelProgressPerSecond = 0.01f;
+
 
     private void OnEnable()
     {
@@ -46,6 +51,7 @@ public class GameController : MonoBehaviour
         shelves = new List<Server[]>();
         //instantiate plantable server list
         PlantableServerList = new List<Server>();
+        ItemContainerToServer = new Dictionary<ItemContainer, Server>();
         //instantiate planted servers to game object dictionary
         //this will store all server models that planted and link them to the game objects in the game
         plantedServersToGOs = new Dictionary<Server, GameObject>();
@@ -59,18 +65,22 @@ public class GameController : MonoBehaviour
         Server server;
         for (int i = 0; i < 8; i++)
         {
-            server = new Server() { Name = "Server" + i, plantable = true, upgradeable = false, spriteName = "Computer" + i % 5, mps = 100 * (i + 1), requiredLevel = (2 * i + 1) };
+            server = new Server() { Name = "Server" + i, plantable = true, upgradeable = false, spriteName = "Computer" + i % 5, mps = 20 * (i + 1), requiredLevel = (2 * i + 1) , requiredMoneyForUpgrade=100};
             PlantableServerList.Add(server);
         }
 
     }
-
+  
     void Start()
+    {
+        ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
+        CreateShelf();
+    }
+    void CreateShelf()
     {
         ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
         for (int i = 0; i < serverCountInRow; i++)
         {
-
             GameObject placeHolderGO = (GameObject)Instantiate(placeholderPrefab);
             placeHolderGO.transform.SetParent(shelfGridTransform, false);
             ItemPlaceholder placeholder = placeHolderGO.GetComponent<ItemPlaceholder>();
@@ -80,30 +90,19 @@ public class GameController : MonoBehaviour
             ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
             itemContainer.CanDrag = false;
             ItemContainerToGO.Add(itemContainer, itemcontainerGO);
+            ItemContainerToServer.Add(itemContainer, null);
         }
     }
     public void UnlockShelf()
     {
         if (money - shelfPrice < 0)
             return;
-        ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
-        for (int i = 0; i < serverCountInRow; i++)
+
+
+        CreateShelf();
+        if (plantingServer != null)
         {
-
-            GameObject placeHolderGO = (GameObject)Instantiate(placeholderPrefab);
-            placeHolderGO.transform.SetParent(shelfGridTransform, false);
-            ItemPlaceholder placeholder = placeHolderGO.GetComponent<ItemPlaceholder>();
-            placeholders[i] = placeholder;
-            GameObject itemcontainerGO = (GameObject)Instantiate(itemcontainerPrefab);
-            itemcontainerGO.transform.SetParent(placeHolderGO.transform, false);
-            ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
-            itemContainer.CanDrag = false;
-            ItemContainerToGO.Add(itemContainer, itemcontainerGO);
-            if (plantingServer != null)
-            {
-                plantingServer.PlantServer();
-            }
-
+            plantingServer.PlantServer();
         }
         //
         money = money - shelfPrice;
@@ -129,6 +128,15 @@ public class GameController : MonoBehaviour
             {
                 server.Update();
             }
+
+            levelProgress += levelProgressPerSecond * levelProgressMultiplier;
+
+            if (levelProgress >= 1)
+            {
+                level++;
+                LeveledUp?.Invoke(level);
+                levelProgress = 0;
+            }
         }
     }
 
@@ -147,13 +155,8 @@ public class GameController : MonoBehaviour
 
         //level progress
         //FIXME : 0.01 is hard coded turn it to a variable and change the value with power ups
-        levelProgress += 0.1f;//(float)(1 / Math.Pow(10, level + 1));
-        if (levelProgress >= 1)
-        {
-            level++;
-            LeveledUp?.Invoke(level);
-            levelProgress = 0;
-        }
+       
+       
     }
 
 
