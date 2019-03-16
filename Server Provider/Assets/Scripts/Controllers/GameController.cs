@@ -35,12 +35,12 @@ public class GameController : MonoBehaviour
     //Game Logic Variables
     int shelfCount = 1;
     public int shelfPrice = 1000;
-    public int money = 9999;
+    public int money = 0;
     public float levelProgress = 0;
     public int level = 1;
     public Server plantingServer = null;
     //whenever we use a power up we can set this multiplier to any power of 10
-    float levelProgressMultiplier=1;
+    float levelProgressMultiplier=3;
     float levelProgressPerSecond = 0.01f;
 
 
@@ -65,7 +65,16 @@ public class GameController : MonoBehaviour
         Server server;
         for (int i = 0; i < 8; i++)
         {
-            server = new Server() { Name = "Server" + i, plantable = true, upgradeable = false, spriteName = "Computer" + i % 5, mps = 20 * (i + 1), requiredLevel = (2 * i + 1) , requiredMoneyForUpgrade=100};
+            server = new Server() {
+                Name = "Server" + i,
+                plantable = true,
+                upgradeable = false,
+                spriteName = "Computer" + i % 5,
+                mps = i + 1,
+                requiredLevel = (2 * i + 1),
+                requiredMoneyForUpgrade = 30
+            };
+
             PlantableServerList.Add(server);
         }
 
@@ -76,6 +85,7 @@ public class GameController : MonoBehaviour
         ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
         CreateShelf();
     }
+
     void CreateShelf()
     {
         ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
@@ -93,6 +103,7 @@ public class GameController : MonoBehaviour
             ItemContainerToServer.Add(itemContainer, null);
         }
     }
+
     public void UnlockShelf()
     {
         if (money - shelfPrice < 0)
@@ -116,7 +127,7 @@ public class GameController : MonoBehaviour
     }
 
     float time = 0f;
-    // Update is called once per frame
+
     void Update()
     {
         time += Time.deltaTime;
@@ -124,10 +135,14 @@ public class GameController : MonoBehaviour
         if (time >= 1f)
         {
             time = 0f;
+
+            if (plantedServersToGOs.Count == 0)
+                return;
+
             foreach (Server server in plantedServersToGOs.Keys)
             {
                 server.Update();
-            }
+            }            
 
             levelProgress += levelProgressPerSecond * levelProgressMultiplier;
 

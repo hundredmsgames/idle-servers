@@ -83,9 +83,6 @@ public class UpgradeablePanelController : MonoBehaviour
 
         copy.Planted += Copy_Planted;
         animationsController.UpgradesOpenCloseAnim(false);
-        GameController.Instance.plantedServersToGOs.Add(copy, null);
-
-
     }
 
     private void Copy_Planted(Server server)
@@ -95,13 +92,12 @@ public class UpgradeablePanelController : MonoBehaviour
             if (server.Name == servers.Name)
             {
                 Transform buttonTransform = servers2buttonsInUpgradeablePanels[servers].gameObject.transform;
-                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + SIPrefix.GetInfo(server.requiredMoneyForUpgrade,1).AmountWithPrefix;
+                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(server.requiredMoneyForUpgrade);
                 Button btn = buttonTransform.GetComponent<Button>();
                 btn.onClick.RemoveAllListeners();
                 btn.onClick.AddListener(() => { UpgradeServer(servers2buttonsInUpgradeablePanels[servers], server); });
             }
         }
-
     }
 
     private void UpgradeServer(object sender, Server server)
@@ -113,8 +109,7 @@ public class UpgradeablePanelController : MonoBehaviour
         GameController.Instance.money -= server.requiredMoneyForUpgrade;
         
         server.Upgraded += Server_Upgraded;
-        server.UpgradeServer();
-           
+        server.UpgradeServer();   
     }
 
     private void Server_Upgraded(Server server)
@@ -124,7 +119,7 @@ public class UpgradeablePanelController : MonoBehaviour
             if (server.Name == servers.Name)
             {
                 Transform buttonTransform = servers2buttonsInUpgradeablePanels[servers].gameObject.transform;
-                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + SIPrefix.GetInfo(server.requiredMoneyForUpgrade,1).AmountWithPrefix;
+                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(server.requiredMoneyForUpgrade);
             }
         }
         

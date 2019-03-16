@@ -10,6 +10,7 @@ public class GameUIController : MonoBehaviour
     public TextMeshProUGUI currentMoneyText;
     public Image filledImage;
     public TextMeshProUGUI currentLevel;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,11 +20,12 @@ public class GameUIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentshelfpriceText.text ="Unluck " + SIPrefix.GetInfo(GameController.Instance.shelfPrice,1).AmountWithPrefix;
-        currentMoneyText.text = SIPrefix.GetInfo(GameController.Instance.money, 1).AmountWithPrefix ;
+        currentshelfpriceText.text ="Unluck " + Extensions.Format(GameController.Instance.shelfPrice);
+        currentMoneyText.text = Extensions.Format(GameController.Instance.money);
         filledImage.fillAmount = GameController.Instance.levelProgress;
         currentLevel.text ="Level "+ GameController.Instance.level.ToString() ;
     }
+
     public void UnlockShelf()
     {
         GameController.Instance.UnlockShelf();

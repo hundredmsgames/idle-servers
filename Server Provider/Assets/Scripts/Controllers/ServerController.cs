@@ -8,16 +8,16 @@ using UnityEngine.UI;
 public class ServerController : MonoBehaviour
 {
     public GameObject serverPrefab;
-    // Start is called before the first frame update
     Server selectedServer;
     Dictionary<ItemContainer, GameObject> itemcontainerToGO;
+
     void Start()
     {
         itemcontainerToGO = GameController.Instance.ItemContainerToGO;
         foreach (Server server in GameController.Instance.PlantableServerList)
         {
             server.Plant += Server_Plant;
-            server.Planted += Server_Planted;
+            //server.Planted += Server_Planted;
         }
     }
 
@@ -42,8 +42,6 @@ public class ServerController : MonoBehaviour
         GameController.Instance.ItemContainerToServer[container].Update();
     }
 
-
-
     private void Server_Plant(Server server)
     {
         selectedServer = server;
@@ -58,7 +56,7 @@ public class ServerController : MonoBehaviour
                 // GameContoller.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>().SetNativeSize();
                 if (itemContainer.IsClickable == false)
                     itemContainer.OnClick += ItemContainer_OnClick;
-
+                
             }
             else
             {
@@ -89,12 +87,6 @@ public class ServerController : MonoBehaviour
         GameController.Instance.ItemContainerToServer[container] = selectedServer;
         //after server planted selected server gets set to null so be carefull where you do this
         selectedServer.PlantedServer();
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 }

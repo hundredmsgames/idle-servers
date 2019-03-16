@@ -9,7 +9,7 @@ public class Server
 
     public int serverlevel=1;
     public int requiredLevel;
-    public int mps;//money per second
+    public int mps;     //money per second
     public int requiredMoneyForUpgrade;
     int ramSize;
 
@@ -88,16 +88,16 @@ public class Server
     public void UpgradeServer()
     {
         serverlevel++;
-        mps += 100;
-        requiredMoneyForUpgrade = 100 * serverlevel;
+        mps += 1;
+        requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.1f);
         Upgraded?.Invoke(this);
-      
-
     }
+
     public void PlantServer()
     {
         Plant?.Invoke(this);
     }
+
     public void PlantedServer()
     {
         Planted?.Invoke(this);
