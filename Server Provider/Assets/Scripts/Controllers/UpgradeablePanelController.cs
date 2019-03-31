@@ -82,11 +82,13 @@ public class UpgradeablePanelController : MonoBehaviour
         copy.PlantServer();
 
         copy.Planted += Copy_Planted;
+        copy.Planted += ServerController.Instance.Server_Planted;
         animationsController.UpgradesOpenCloseAnim(false);
     }
 
     private void Copy_Planted(Server server)
     {
+        //find the copied server in the upgradeable panel
         foreach (Server servers in servers2buttonsInUpgradeablePanels.Keys)
         {
             if (server.Name == servers.Name)

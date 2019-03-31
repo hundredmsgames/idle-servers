@@ -7,10 +7,17 @@ using UnityEngine.UI;
 
 public class ServerController : MonoBehaviour
 {
+    public static ServerController Instance;
     public GameObject serverPrefab;
     Server selectedServer;
     Dictionary<ItemContainer, GameObject> itemcontainerToGO;
-
+    private void OnEnable()
+    {
+        if (Instance == null)
+            Instance = this;
+        
+           
+    }
     void Start()
     {
         itemcontainerToGO = GameController.Instance.ItemContainerToGO;
@@ -21,7 +28,7 @@ public class ServerController : MonoBehaviour
         }
     }
 
-    private void Server_Planted(Server server)
+    public void Server_Planted(Server server)
     {
         //  Debug.Log("ServerController::Server_Plant " + server.Name);
         foreach (ItemContainer itemContainer in GameController.Instance.ItemContainerToGO.Keys)
