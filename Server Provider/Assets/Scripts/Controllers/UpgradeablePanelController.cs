@@ -97,25 +97,26 @@ public class UpgradeablePanelController : MonoBehaviour
                 buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(server.requiredMoneyForUpgrade);
                 Button btn = buttonTransform.GetComponent<Button>();
                 btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => { UpgradeServer(servers2buttonsInUpgradeablePanels[servers], server); });
+                btn.onClick.AddListener(() => { UpgradeServerButtonClicked(servers2buttonsInUpgradeablePanels[servers], server); });
             }
         }
+        server.Upgraded += Server_Upgraded;
     }
 
-    private void UpgradeServer(object sender, Server server)
+    private void UpgradeServerButtonClicked(object sender, Server server)
     {
-        Debug.Log(server.Name + " UpgradeablePanelController::Server Upgrade");
+        Debug.Log(server.Name + " UpgradeablePanelController::UpgradeServer");
         if (GameController.Instance.money - server.requiredMoneyForUpgrade < 0)
             return;
 
         GameController.Instance.money -= server.requiredMoneyForUpgrade;
         
-        server.Upgraded += Server_Upgraded;
         server.UpgradeServer();   
     }
 
     private void Server_Upgraded(Server server)
     {
+        Debug.Log("UpgradeablePanelController::Server_Upgraded");
         foreach (Server servers in servers2buttonsInUpgradeablePanels.Keys)
         {
             if (server.Name == servers.Name)
@@ -125,12 +126,5 @@ public class UpgradeablePanelController : MonoBehaviour
             }
         }
         
-    }
-
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
