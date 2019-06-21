@@ -56,12 +56,6 @@ public class ServerController : MonoBehaviour
     private void Server_Plant(Server server)
     {
 		Debug.Log("ServerController::Server_Plant " + server.Name);
-		Debug.Log(GameController.Instance.ItemContainerToGO.Count);
-		foreach (ItemContainer itemContainer in itemcontainerToGO.Keys)
-		{
-			Debug.Log(GameController.Instance.ItemContainerToGO[itemContainer] == null);
-			Debug.Log(itemContainer.GetHashCode());
-		}
 
         selectedServer = server;
         foreach (ItemContainer itemContainer in itemcontainerToGO.Keys)

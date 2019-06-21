@@ -9,8 +9,9 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public static GameController Instance;
+
     // Start is called before the first frame update
-    //every row(shelf) has 4 tiles
+    // every row(shelf) has 4 tiles
     int serverCountInRow = 4;
 
     public List<Server> PlantableServerList { get; protected set; }
@@ -65,15 +66,9 @@ public class GameController : MonoBehaviour
 
         ItemContainerToGO = new Dictionary<ItemContainer, GameObject>();
         CreatePlantableServers();
-
-    }
-
-	void Start()
-	{
-		// We call it here beacuse DataBind method in ArrangeItemsControl,
-		// should be called before this method. DataBind destroys all gameobjects in ItemContainer.
+		CleanShelf();
 		CreateShelf();
-	}
+    }
 
     private void CreatePlantableServers()
     {
@@ -93,6 +88,22 @@ public class GameController : MonoBehaviour
             PlantableServerList.Add(server);
         }
     }
+
+	// Clean shelves before executing.
+	void CleanShelf()
+	{
+		if(DebugConfigs.RESET_UI)
+		{
+			foreach(Transform placeholder in shelfGridTransform)
+			{
+				ItemContainer container = placeholder.GetComponentInChildren<ItemContainer>();
+				if(container != null)
+				{
+					Destroy(container.gameObject);
+				}
+			}
+		}
+	}
 
     void CreateShelf()
     {

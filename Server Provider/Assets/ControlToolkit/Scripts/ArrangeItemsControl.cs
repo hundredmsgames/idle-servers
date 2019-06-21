@@ -171,16 +171,6 @@ namespace ControlToolkit
 			{
 				return;
 			}
-
-			for(int i = 0; i < m_placeholders.Length; ++i)
-			{
-				ItemPlaceholder placeholder = m_placeholders[i];
-				ItemContainer container = placeholder.GetComponentInChildren<ItemContainer>();
-				if(container != null)
-				{
-					Destroy(container.gameObject);
-				}
-			}
 			
 			if(m_items != null)
 			{
