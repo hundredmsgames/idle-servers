@@ -26,6 +26,8 @@ public class GameController : MonoBehaviour
 
     List<Server[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
+
+	// We can use one dictionary here.
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
     public Dictionary<ItemContainer, Server> ItemContainerToServer;
 
@@ -46,19 +48,32 @@ public class GameController : MonoBehaviour
 
     private void OnEnable()
     {
-        if (Instance == null)
-            Instance = this;
+        if (Instance != null)
+			return;
+        
+		Instance = this;
+
         shelves = new List<Server[]>();
+
         //instantiate plantable server list
         PlantableServerList = new List<Server>();
         ItemContainerToServer = new Dictionary<ItemContainer, Server>();
-        //instantiate planted servers to game object dictionary
+        
+		//instantiate planted servers to game object dictionary
         //this will store all server models that planted and link them to the game objects in the game
         plantedServersToGOs = new Dictionary<Server, GameObject>();
 
         ItemContainerToGO = new Dictionary<ItemContainer, GameObject>();
         CreatePlantableServers();
+
     }
+
+	void Start()
+	{
+		// We call it here beacuse DataBind method in ArrangeItemsControl,
+		// should be called before this method. DataBind destroys all gameobjects in ItemContainer.
+		CreateShelf();
+	}
 
     private void CreatePlantableServers()
     {
@@ -77,13 +92,6 @@ public class GameController : MonoBehaviour
 
             PlantableServerList.Add(server);
         }
-
-    }
-  
-    void Start()
-    {
-        ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
-        CreateShelf();
     }
 
     void CreateShelf()

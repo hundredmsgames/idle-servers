@@ -172,8 +172,6 @@ namespace ControlToolkit
 				return;
 			}
 
-		
-
 			for(int i = 0; i < m_placeholders.Length; ++i)
 			{
 				ItemPlaceholder placeholder = m_placeholders[i];

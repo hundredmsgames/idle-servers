@@ -11,6 +11,7 @@ public class AnimationsController : MonoBehaviour
     {
         if (Instance != null)
             return;
+		
         Instance = this;
     }
 

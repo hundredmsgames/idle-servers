@@ -11,15 +11,19 @@ public class ServerController : MonoBehaviour
     public GameObject serverPrefab;
     Server selectedServer;
     Dictionary<ItemContainer, GameObject> itemcontainerToGO;
-    private void OnEnable()
+    
+	private void OnEnable()
     {
-        if (Instance == null)
-            Instance = this;
-        
-           
-    }
+        if (Instance != null)
+			return;
+
+		Instance = this;
+	}
+
     void Start()
-    {
+	{
+		Debug.Log("ServerController Start runs");
+
         itemcontainerToGO = GameController.Instance.ItemContainerToGO;
         foreach (Server server in GameController.Instance.PlantableServerList)
         {
@@ -51,8 +55,15 @@ public class ServerController : MonoBehaviour
 
     private void Server_Plant(Server server)
     {
+		Debug.Log("ServerController::Server_Plant " + server.Name);
+		Debug.Log(GameController.Instance.ItemContainerToGO.Count);
+		foreach (ItemContainer itemContainer in itemcontainerToGO.Keys)
+		{
+			Debug.Log(GameController.Instance.ItemContainerToGO[itemContainer] == null);
+			Debug.Log(itemContainer.GetHashCode());
+		}
+
         selectedServer = server;
-        Debug.Log("ServerController::Server_Plant " + server.Name);
         foreach (ItemContainer itemContainer in itemcontainerToGO.Keys)
         {
             if (itemContainer.hasServer == false)
