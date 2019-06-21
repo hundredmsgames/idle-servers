@@ -42,8 +42,9 @@ public class GameController : MonoBehaviour
     public float levelProgress = 0;
     public int level = 1;
     public Server plantingServer = null;
+
     //whenever we use a power up we can set this multiplier to any power of 10
-    float levelProgressMultiplier=3;
+    float levelProgressMultiplier=30;
     float levelProgressPerSecond = 0.01f;
 
 
@@ -53,7 +54,6 @@ public class GameController : MonoBehaviour
 			return;
         
 		Instance = this;
-
         shelves = new List<Server[]>();
 
         //instantiate plantable server list
@@ -107,13 +107,11 @@ public class GameController : MonoBehaviour
 
     void CreateShelf()
     {
-        ItemPlaceholder[] placeholders = new ItemPlaceholder[serverCountInRow];
         for (int i = 0; i < serverCountInRow; i++)
         {
             GameObject placeHolderGO = (GameObject)Instantiate(placeholderPrefab);
             placeHolderGO.transform.SetParent(shelfGridTransform, false);
             ItemPlaceholder placeholder = placeHolderGO.GetComponent<ItemPlaceholder>();
-            placeholders[i] = placeholder;
             GameObject itemcontainerGO = (GameObject)Instantiate(itemcontainerPrefab);
             itemcontainerGO.transform.SetParent(placeHolderGO.transform, false);
             ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
@@ -125,19 +123,26 @@ public class GameController : MonoBehaviour
 
     public void UnlockShelf()
     {
-        if (money - shelfPrice < 0)
+        // If we do not have enough money just quit this method.
+        // Note: It is a good place to show tips like "You don't have enough money".
+        if (money <= shelfPrice)
             return;
 
-
+        // Create the new shelf, placeholders, item containers etc.
         CreateShelf();
+
+        // If we unlock the shelf while we are planting a server,
+        // we should call PlantServer again thus new shelf can be updated.  
         if (plantingServer != null)
         {
             plantingServer.PlantServer();
         }
-        //
+        
+        // We have enough money so just reduce the price from our money.
         money = money - shelfPrice;
-        //update shelfprice
-        shelfPrice += 1000;
+
+        // Update shelf price
+        shelfPrice += 1;
         shelfCount++;
 
         // https://answers.unity.com/questions/1276433/get-layoutgroup-and-contentsizefitter-to-update-th.html

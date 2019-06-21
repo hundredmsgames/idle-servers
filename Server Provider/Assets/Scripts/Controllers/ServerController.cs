@@ -22,8 +22,6 @@ public class ServerController : MonoBehaviour
 
     void Start()
 	{
-		Debug.Log("ServerController Start runs");
-
         itemcontainerToGO = GameController.Instance.ItemContainerToGO;
         foreach (Server server in GameController.Instance.PlantableServerList)
         {
@@ -34,7 +32,7 @@ public class ServerController : MonoBehaviour
 
     public void Server_Planted(Server server)
     {
-        //  Debug.Log("ServerController::Server_Plant " + server.Name);
+        Debug.Log("ServerController::Server_Planted::" + server.Name);
         foreach (ItemContainer itemContainer in GameController.Instance.ItemContainerToGO.Keys)
         {
             Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
@@ -65,10 +63,9 @@ public class ServerController : MonoBehaviour
                 Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
                 image.sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
                 image.color = new Color(0, 0, 0, 0.1f);
+                itemContainer.OnClick += ItemContainer_OnClick;
+
                 // GameContoller.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>().SetNativeSize();
-                if (itemContainer.IsClickable == false)
-                    itemContainer.OnClick += ItemContainer_OnClick;
-                
             }
             else
             {
@@ -81,24 +78,22 @@ public class ServerController : MonoBehaviour
 
     private void ItemContainer_OnClick(ItemContainer container, UnityEngine.EventSystems.PointerEventData pointerEventData)
     {
-        Debug.Log("ServerController::ItemContainer_OnClick ::PLANTED" + pointerEventData.position);
+        Debug.Log("ServerController::ItemContainer_OnClick::PLANTED" + pointerEventData.position);
 
         GameObject serverGO = Instantiate(serverPrefab);
         serverGO.transform.SetParent(itemcontainerToGO[container].transform, false);
         serverGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
-
-        //serverGO.GetComponent<RectTransform>().rect.Set(0, 0, 0, 0);
         serverGO.GetComponentInChildren<TextMeshProUGUI>().text = selectedServer.Name;
+        //serverGO.GetComponent<RectTransform>().rect.Set(0, 0, 0, 0);
 
-        Debug.Log("Update added");
+        Debug.Log("Update event added to server.");
         selectedServer.UpdateEvent += GameController.Instance.ServerUpdate;
 
         GameController.Instance.plantedServersToGOs[selectedServer] = serverGO;
-
-        container.hasServer = true;
         GameController.Instance.ItemContainerToServer[container] = selectedServer;
-        //after server planted selected server gets set to null so be carefull where you do this
-        selectedServer.PlantedServer();
+        container.hasServer = true;
 
+        // After server planted selected server gets set to null so be carefull where you do this
+        selectedServer.PlantedServer();
     }
 }
