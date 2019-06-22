@@ -26,7 +26,7 @@ public class UpgradeablePanelController : MonoBehaviour
             upgradeableGO.transform.SetParent(parentObjectTransform, false);
 
             upgradeableGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = server.Name;
-            upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + server.spriteName);
+            upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + server.Name);
 
             Button btn = upgradeableGO.GetComponentInChildren<Button>();
             btn.onClick.AddListener(() => { Plant(upgradeableGO, server); });
@@ -74,8 +74,6 @@ public class UpgradeablePanelController : MonoBehaviour
         GameObject upgradeableGO = (GameObject)sender;
 
         Server copy = server.Copy();
-        copy.plantable = false;
-        copy.upgradeable = true;
         //this doesnt work yet
         //we will add events to server about how to behave when this happen 
         //then it will work

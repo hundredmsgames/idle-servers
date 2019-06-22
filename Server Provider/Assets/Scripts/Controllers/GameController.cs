@@ -10,30 +10,29 @@ public class GameController : MonoBehaviour
 {
     public static GameController Instance;
 
-    // Start is called before the first frame update
-    // every row(shelf) has 4 tiles
-    int serverCountInRow = 4;
-
-    public List<Server> PlantableServerList { get; protected set; }
-
+    // We can use one dictionary here.
+    public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
+    public Dictionary<ItemContainer, Server> ItemContainerToServer;
     public Dictionary<Server, GameObject> plantedServersToGOs;
-
-    public Transform moneyTextContainer;
+    public Dictionary<string, bool> canSetupNewServer;
 
     public GameObject moneyTextPrefab;
     public GameObject placeholderPrefab;
     public GameObject itemcontainerPrefab;
     public Transform shelfGridTransform;
+    public Transform moneyTextContainer;
 
+    public List<Server> PlantableServerList { get; protected set; }
     List<Server[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
 
-	// We can use one dictionary here.
-    public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
-    public Dictionary<ItemContainer, Server> ItemContainerToServer;
-
     public delegate void LevelHandler(int level);
     public event LevelHandler LeveledUp;
+
+
+    // Start is called before the first frame update
+    // every row(shelf) has 4 tiles
+    int serverCountInRow = 4;
 
     //Game Logic Variables
     int shelfCount = 1;
@@ -76,10 +75,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < 8; i++)
         {
             server = new Server() {
-                Name = "Server" + i,
-                plantable = true,
-                upgradeable = false,
-                spriteName = "Computer" + i % 5,
+                Name = "Computer" + i % 5,
                 mps = i + 1,
                 requiredLevel = (2 * i + 1),
                 requiredMoneyForUpgrade = 30

@@ -61,7 +61,7 @@ public class ServerController : MonoBehaviour
             if (itemContainer.hasServer == false)
             {
                 Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
-                image.sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
+                image.sprite = Resources.Load<Sprite>("Images\\" + selectedServer.Name);
                 image.color = new Color(0, 0, 0, 0.1f);
                 itemContainer.OnClick += ItemContainer_OnClick;
 
@@ -82,7 +82,7 @@ public class ServerController : MonoBehaviour
 
         GameObject serverGO = Instantiate(serverPrefab);
         serverGO.transform.SetParent(itemcontainerToGO[container].transform, false);
-        serverGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + selectedServer.spriteName);
+        serverGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + selectedServer.Name);
         serverGO.GetComponentInChildren<TextMeshProUGUI>().text = selectedServer.Name;
         //serverGO.GetComponent<RectTransform>().rect.Set(0, 0, 0, 0);
 
