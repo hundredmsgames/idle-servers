@@ -10,33 +10,35 @@ public class UpgradeablePanelController : MonoBehaviour
     public Transform parentObjectTransform;
     public GameObject upgradeablePrefab;
     AnimationsController animationsController;
-    public Dictionary<Computer, Button> servers2buttonsInUpgradeablePanels;
+    public Dictionary<Computer, GameObject> serverToUpgradeContainer;
     Computer[] servers;
 
     // Start is called before the first frame update
     void Start()
     {
-        servers2buttonsInUpgradeablePanels = new Dictionary<Computer, Button>();
+        serverToUpgradeContainer = new Dictionary<Computer, GameObject>();
         animationsController = AnimationsController.Instance;
-        servers = GameController.Instance.PlantableServerList.ToArray();
         GameController.Instance.LeveledUp += Player_LeveledUp;
-        foreach (Computer server in servers)
+
+        foreach (ComputerInfo computerInfo in GameController.Instance.nameToComputerInfo.Values)
         {
+            Computer proto = computerInfo.computerProto;
+
             GameObject upgradeableGO = Instantiate(upgradeablePrefab);
             upgradeableGO.transform.SetParent(parentObjectTransform, false);
-
-            upgradeableGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = server.Name;
-            upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + server.Name);
+            upgradeableGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = proto.Name;
+            upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + proto.Name);
 
             Button btn = upgradeableGO.GetComponentInChildren<Button>();
-            btn.onClick.AddListener(() => { Plant(upgradeableGO, server); });
-            if (server.requiredLevel > GameController.Instance.level)
+            btn.onClick.AddListener(() => { Plant(upgradeableGO, proto); });
+            if (proto.requiredLevel > GameController.Instance.level)
             {
                 btn.interactable = false;
-                btn.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Required Level " + server.requiredLevel;
+                btn.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Required Level " + proto.requiredLevel;
             }
 
-            servers2buttonsInUpgradeablePanels.Add(server, btn);
+            serverToUpgradeContainer.Add(proto, upgradeableGO);
+
             //we need to set behaviour of this upgradeable or plantable server objects
             //for example is this object active?
             //is this upgradeable or plantable
@@ -51,16 +53,15 @@ public class UpgradeablePanelController : MonoBehaviour
 
     private void Player_LeveledUp(int level)
     {
-        foreach (Computer server in servers2buttonsInUpgradeablePanels.Keys)
+        foreach (Computer server in serverToUpgradeContainer.Keys)
         {
             if (server.requiredLevel <= GameController.Instance.level)
             {
-                if (servers2buttonsInUpgradeablePanels[server].interactable == false)
-                    servers2buttonsInUpgradeablePanels[server].transform.GetComponentInChildren<TextMeshProUGUI>().text = "Plant";
+                Button button = serverToUpgradeContainer[server].GetComponentInChildren<Button>();
+                if (button.interactable == false)
+                    button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Plant";
 
-                servers2buttonsInUpgradeablePanels[server].interactable = true;
-
-
+                button.interactable = true;
             }
         }
     }
@@ -79,26 +80,25 @@ public class UpgradeablePanelController : MonoBehaviour
         //then it will work
         copy.PlantServer();
 
-        copy.Planted += Copy_Planted;
-        copy.Planted += ComputerController.Instance.Server_Planted;
+        copy.Planted += ComputerPlanted;
+        copy.Planted += GameController.Instance.ComputerPlanted;
         animationsController.UpgradesOpenCloseAnim(false);
     }
 
-    private void Copy_Planted(Computer server)
+    private void ComputerPlanted(Computer server)
     {
         //find the copied server in the upgradeable panel
-        foreach (Computer servers in servers2buttonsInUpgradeablePanels.Keys)
+        foreach (Computer servers in serverToUpgradeContainer.Keys)
         {
             if (server.Name == servers.Name)
             {
-                Transform buttonTransform = servers2buttonsInUpgradeablePanels[servers].gameObject.transform;
-                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(server.requiredMoneyForUpgrade);
-                Button btn = buttonTransform.GetComponent<Button>();
-                btn.onClick.RemoveAllListeners();
-                btn.onClick.AddListener(() => { UpgradeServerButtonClicked(servers2buttonsInUpgradeablePanels[servers], server); });
+                Button button = serverToUpgradeContainer[servers].GetComponentInChildren<Button>();
+                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(server.requiredMoneyForUpgrade);
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(() => { UpgradeServerButtonClicked(serverToUpgradeContainer[servers], server); });
             }
         }
-        server.Upgraded += Server_Upgraded;
+        server.Upgraded += ComputerUpgraded;
     }
 
     private void UpgradeServerButtonClicked(object sender, Computer server)
@@ -112,15 +112,15 @@ public class UpgradeablePanelController : MonoBehaviour
         server.UpgradeServer();   
     }
 
-    private void Server_Upgraded(Computer server)
+    private void ComputerUpgraded(Computer server)
     {
-        Debug.Log("UpgradeablePanelController::Server_Upgraded");
-        foreach (Computer servers in servers2buttonsInUpgradeablePanels.Keys)
+        Debug.Log("UpgradeablePanelController::ComputerUpgraded");
+        foreach (Computer servers in serverToUpgradeContainer.Keys)
         {
             if (server.Name == servers.Name)
             {
-                Transform buttonTransform = servers2buttonsInUpgradeablePanels[servers].gameObject.transform;
-                buttonTransform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(server.requiredMoneyForUpgrade);
+                Button button = serverToUpgradeContainer[servers].GetComponentInChildren<Button>();
+                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(server.requiredMoneyForUpgrade);
             }
         }
         

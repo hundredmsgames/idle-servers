@@ -6,13 +6,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameController : MonoBehaviour
+public partial class GameController : MonoBehaviour
 {
     public static GameController Instance;
 
     // We can use one dictionary here.
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
-    public Dictionary<ItemContainer, Computer> ItemContainerToServer;
+    public Dictionary<ItemContainer, Computer> ItemContainerToComputer;
     public Dictionary<Computer, GameObject> plantedServersToGOs;
     public Dictionary<string, ComputerInfo> nameToComputerInfo;
 
@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
     public Transform shelfGridTransform;
     public Transform moneyTextContainer;
 
-    public List<Computer> PlantableServerList { get; protected set; }
+    //public List<Computer> PlantableServerList { get; protected set; }
 
 
     List<Computer[]> shelves;
@@ -42,7 +42,6 @@ public class GameController : MonoBehaviour
     public int money = 0;
     public float levelProgress = 0;
     public int level = 1;
-    public Computer plantingServer = null;
 
     //whenever we use a power up we can set this multiplier to any power of 10
     float levelProgressMultiplier=30;
@@ -56,16 +55,12 @@ public class GameController : MonoBehaviour
         
 		Instance = this;
         shelves = new List<Computer[]>();
-
-        //instantiate plantable server list
-        PlantableServerList = new List<Computer>();
-        ItemContainerToServer = new Dictionary<ItemContainer, Computer>();
         
-		//instantiate planted servers to game object dictionary
-        //this will store all server models that planted and link them to the game objects in the game
+		// instantiate planted servers to game object dictionary
+        // this will store all server models that planted and link them to the game objects in the game
         plantedServersToGOs = new Dictionary<Computer, GameObject>();
-
         ItemContainerToGO = new Dictionary<ItemContainer, GameObject>();
+        ItemContainerToComputer = new Dictionary<ItemContainer, Computer>();
 
         InitalizeComputerInfo();
         CreateComputerPrototypes();
@@ -96,14 +91,13 @@ public class GameController : MonoBehaviour
             };
 
             nameToComputerInfo["Computer" + i].computerProto = computer;
-            PlantableServerList.Add(computer); // will be removed
         }
     }
 
     // Maybe this method deserves a better name idk.
     private void FillComputerInfo()
     {
-
+        // Need to read canSetup and numberOfComputer info of every computer.
     }
 
 	// Clean shelves before executing.
@@ -134,7 +128,7 @@ public class GameController : MonoBehaviour
             ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
             itemContainer.CanDrag = false;
             ItemContainerToGO.Add(itemContainer, itemcontainerGO);
-            ItemContainerToServer.Add(itemContainer, null);
+            ItemContainerToComputer.Add(itemContainer, null);
         }
     }
 
@@ -150,9 +144,9 @@ public class GameController : MonoBehaviour
 
         // If we unlock the shelf while we are planting a server,
         // we should call PlantServer again thus new shelf can be updated.  
-        if (plantingServer != null)
+        if (selectedComputer != null)
         {
-            plantingServer.PlantServer();
+            selectedComputer.PlantServer();
         }
         
         // We have enough money so just reduce the price from our money.
