@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Server
+public class Computer
 {
     // Name of the server
     public string Name { get; set; }
     
     // Current level of the server.
-    public int serverlevel = 1;
+    public int currLevel = 1;
 
     // To make this server plantable game level should be
     // equal or above the requiredLevel.
@@ -23,22 +23,19 @@ public class Server
     // Maximum level that server can reach.
     int maxLevel = 10;
 
-    public delegate void LevelUpHandler(int level);
-    public event LevelUpHandler LeveledUp;
+    public delegate void ComputerEventsHandler(Computer server);
+    public event ComputerEventsHandler Plant;
+    public event ComputerEventsHandler Planted;
+    public event ComputerEventsHandler Upgraded;
+    public event ComputerEventsHandler UpdateEvent;
 
-    public delegate void ServerEventsHandler(Server server);
-    public event ServerEventsHandler Plant;
-    public event ServerEventsHandler Planted;
-    public event ServerEventsHandler Upgraded;
-    public event ServerEventsHandler UpdateEvent;
-
-    public Server Copy()
+    public Computer Copy()
     {
-        Server copy = new Server() {
-            mps = this.mps,
-            serverlevel = this.serverlevel,
-            maxLevel = this.maxLevel,
+        Computer copy = new Computer() {
             Name = this.Name,
+            mps = this.mps,
+            currLevel = this.currLevel,
+            maxLevel = this.maxLevel,
             requiredLevel = this.requiredLevel,
             requiredMoneyForUpgrade = this.requiredMoneyForUpgrade,
             
@@ -46,8 +43,7 @@ public class Server
             UpdateEvent = this.UpdateEvent,
             Upgraded = this.Upgraded,
             Planted = this.Planted,
-            Plant = this.Plant,
-            LeveledUp = this.LeveledUp
+            Plant = this.Plant
         };
 
         return copy;
@@ -59,32 +55,20 @@ public class Server
         return mps;
     }
 
-    public void LevelUp()
+    public void UpgradeServer()
     {
-        serverlevel++;
-        if (serverlevel >= maxLevel)
+        currLevel++;
+        mps += 1;
+        requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.1f);
+
+        if (currLevel >= maxLevel)
         {
             // We need to notify the dictionary in the GameController that
             // we can setup a new server of this now.
 
             //setupNewServer = true;
         }
-        else
-        {
-            LeveledUp(serverlevel);
-        }
-       
-        //when we reach to the max then we can plant(setup) new server and reference to it
-        //figure it out
 
-        //recalculate mps(money per second)
-    }
-
-    public void UpgradeServer()
-    {
-        serverlevel++;
-        mps += 1;
-        requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.1f);
         Upgraded?.Invoke(this);
     }
 

@@ -12,9 +12,9 @@ public class GameController : MonoBehaviour
 
     // We can use one dictionary here.
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
-    public Dictionary<ItemContainer, Server> ItemContainerToServer;
-    public Dictionary<Server, GameObject> plantedServersToGOs;
-    public Dictionary<string, bool> canSetupNewServer;
+    public Dictionary<ItemContainer, Computer> ItemContainerToServer;
+    public Dictionary<Computer, GameObject> plantedServersToGOs;
+    public Dictionary<string, ComputerInfo> nameToComputerInfo;
 
     public GameObject moneyTextPrefab;
     public GameObject placeholderPrefab;
@@ -22,8 +22,10 @@ public class GameController : MonoBehaviour
     public Transform shelfGridTransform;
     public Transform moneyTextContainer;
 
-    public List<Server> PlantableServerList { get; protected set; }
-    List<Server[]> shelves;
+    public List<Computer> PlantableServerList { get; protected set; }
+
+
+    List<Computer[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
 
     public delegate void LevelHandler(int level);
@@ -40,7 +42,7 @@ public class GameController : MonoBehaviour
     public int money = 0;
     public float levelProgress = 0;
     public int level = 1;
-    public Server plantingServer = null;
+    public Computer plantingServer = null;
 
     //whenever we use a power up we can set this multiplier to any power of 10
     float levelProgressMultiplier=30;
@@ -53,36 +55,55 @@ public class GameController : MonoBehaviour
 			return;
         
 		Instance = this;
-        shelves = new List<Server[]>();
+        shelves = new List<Computer[]>();
 
         //instantiate plantable server list
-        PlantableServerList = new List<Server>();
-        ItemContainerToServer = new Dictionary<ItemContainer, Server>();
+        PlantableServerList = new List<Computer>();
+        ItemContainerToServer = new Dictionary<ItemContainer, Computer>();
         
 		//instantiate planted servers to game object dictionary
         //this will store all server models that planted and link them to the game objects in the game
-        plantedServersToGOs = new Dictionary<Server, GameObject>();
+        plantedServersToGOs = new Dictionary<Computer, GameObject>();
 
         ItemContainerToGO = new Dictionary<ItemContainer, GameObject>();
-        CreatePlantableServers();
+
+        InitalizeComputerInfo();
+        CreateComputerPrototypes();
 		CleanShelf();
 		CreateShelf();
     }
 
-    private void CreatePlantableServers()
+    private void InitalizeComputerInfo()
     {
-        Server server;
-        for (int i = 0; i < 8; i++)
+        nameToComputerInfo = new Dictionary<string, ComputerInfo>();
+
+        // For now we just use hardcoded names for computers
+        // e.g. Computer 0, Computer 1
+        for (int i = 0; i < 5; i++)
+            nameToComputerInfo.Add("Computer" + i,  new ComputerInfo());
+    }
+
+    private void CreateComputerPrototypes()
+    {
+        Computer computer;
+        for (int i = 0; i < 5; i++)
         {
-            server = new Server() {
-                Name = "Computer" + i % 5,
+            computer = new Computer() {
+                Name = "Computer" + i,
                 mps = i + 1,
                 requiredLevel = (2 * i + 1),
                 requiredMoneyForUpgrade = 30
             };
 
-            PlantableServerList.Add(server);
+            nameToComputerInfo["Computer" + i].computerProto = computer;
+            PlantableServerList.Add(computer); // will be removed
         }
+    }
+
+    // Maybe this method deserves a better name idk.
+    private void FillComputerInfo()
+    {
+
     }
 
 	// Clean shelves before executing.
@@ -159,7 +180,7 @@ public class GameController : MonoBehaviour
             if (plantedServersToGOs.Count == 0)
                 return;
 
-            foreach (Server server in plantedServersToGOs.Keys)
+            foreach (Computer server in plantedServersToGOs.Keys)
             {
                 server.Update();
             }            
@@ -175,7 +196,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    public void ServerUpdate(Server server)
+    public void ServerUpdate(Computer server)
     {
         //earn money
         money += server.ProduceMoney();
@@ -194,5 +215,14 @@ public class GameController : MonoBehaviour
        
     }
 
+    void OnApplicationPause()
+    {
+        Debug.Log("OnApplicationPause()");
+    }
+
+    void OnApplicationQuit()
+    {
+        Debug.Log("OnApplicationQuit()");
+    }
 
 }

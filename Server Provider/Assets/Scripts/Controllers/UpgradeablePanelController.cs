@@ -10,17 +10,17 @@ public class UpgradeablePanelController : MonoBehaviour
     public Transform parentObjectTransform;
     public GameObject upgradeablePrefab;
     AnimationsController animationsController;
-    public Dictionary<Server, Button> servers2buttonsInUpgradeablePanels;
-    Server[] servers;
+    public Dictionary<Computer, Button> servers2buttonsInUpgradeablePanels;
+    Computer[] servers;
 
     // Start is called before the first frame update
     void Start()
     {
-        servers2buttonsInUpgradeablePanels = new Dictionary<Server, Button>();
+        servers2buttonsInUpgradeablePanels = new Dictionary<Computer, Button>();
         animationsController = AnimationsController.Instance;
         servers = GameController.Instance.PlantableServerList.ToArray();
         GameController.Instance.LeveledUp += Player_LeveledUp;
-        foreach (Server server in servers)
+        foreach (Computer server in servers)
         {
             GameObject upgradeableGO = Instantiate(upgradeablePrefab);
             upgradeableGO.transform.SetParent(parentObjectTransform, false);
@@ -51,7 +51,7 @@ public class UpgradeablePanelController : MonoBehaviour
 
     private void Player_LeveledUp(int level)
     {
-        foreach (Server server in servers2buttonsInUpgradeablePanels.Keys)
+        foreach (Computer server in servers2buttonsInUpgradeablePanels.Keys)
         {
             if (server.requiredLevel <= GameController.Instance.level)
             {
@@ -67,27 +67,27 @@ public class UpgradeablePanelController : MonoBehaviour
 
     //we may need upgradeable panel objects with the servers 
     //Dictionary<server,gameobject> so when we plant a server then we can find the object and set the texts or other things easyly
-    public void Plant(object sender, Server server)
+    public void Plant(object sender, Computer computer)
     {
-        Debug.Log(server.Name + "plant active");
+        Debug.Log(computer.Name + " is ready to plant");
         
         GameObject upgradeableGO = (GameObject)sender;
 
-        Server copy = server.Copy();
+        Computer copy = computer.Copy();
         //this doesnt work yet
         //we will add events to server about how to behave when this happen 
         //then it will work
         copy.PlantServer();
 
         copy.Planted += Copy_Planted;
-        copy.Planted += ServerController.Instance.Server_Planted;
+        copy.Planted += ComputerController.Instance.Server_Planted;
         animationsController.UpgradesOpenCloseAnim(false);
     }
 
-    private void Copy_Planted(Server server)
+    private void Copy_Planted(Computer server)
     {
         //find the copied server in the upgradeable panel
-        foreach (Server servers in servers2buttonsInUpgradeablePanels.Keys)
+        foreach (Computer servers in servers2buttonsInUpgradeablePanels.Keys)
         {
             if (server.Name == servers.Name)
             {
@@ -101,7 +101,7 @@ public class UpgradeablePanelController : MonoBehaviour
         server.Upgraded += Server_Upgraded;
     }
 
-    private void UpgradeServerButtonClicked(object sender, Server server)
+    private void UpgradeServerButtonClicked(object sender, Computer server)
     {
         Debug.Log(server.Name + " UpgradeablePanelController::UpgradeServer");
         if (GameController.Instance.money - server.requiredMoneyForUpgrade < 0)
@@ -112,10 +112,10 @@ public class UpgradeablePanelController : MonoBehaviour
         server.UpgradeServer();   
     }
 
-    private void Server_Upgraded(Server server)
+    private void Server_Upgraded(Computer server)
     {
         Debug.Log("UpgradeablePanelController::Server_Upgraded");
-        foreach (Server servers in servers2buttonsInUpgradeablePanels.Keys)
+        foreach (Computer servers in servers2buttonsInUpgradeablePanels.Keys)
         {
             if (server.Name == servers.Name)
             {

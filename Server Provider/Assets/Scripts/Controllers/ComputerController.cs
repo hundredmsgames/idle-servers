@@ -5,11 +5,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ServerController : MonoBehaviour
+public class ComputerController : MonoBehaviour
 {
-    public static ServerController Instance;
+    public static ComputerController Instance;
     public GameObject serverPrefab;
-    Server selectedServer;
+    Computer selectedServer;
     Dictionary<ItemContainer, GameObject> itemcontainerToGO;
     
 	private void OnEnable()
@@ -23,14 +23,13 @@ public class ServerController : MonoBehaviour
     void Start()
 	{
         itemcontainerToGO = GameController.Instance.ItemContainerToGO;
-        foreach (Server server in GameController.Instance.PlantableServerList)
+        foreach (Computer server in GameController.Instance.PlantableServerList)
         {
             server.Plant += Server_Plant;
-            //server.Planted += Server_Planted;
         }
     }
 
-    public void Server_Planted(Server server)
+    public void Server_Planted(Computer server)
     {
         Debug.Log("ServerController::Server_Planted::" + server.Name);
         foreach (ItemContainer itemContainer in GameController.Instance.ItemContainerToGO.Keys)
@@ -51,7 +50,7 @@ public class ServerController : MonoBehaviour
         GameController.Instance.ItemContainerToServer[container].Update();
     }
 
-    private void Server_Plant(Server server)
+    private void Server_Plant(Computer server)
     {
 		Debug.Log("ServerController::Server_Plant " + server.Name);
 

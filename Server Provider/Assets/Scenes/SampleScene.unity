@@ -2443,12 +2443,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27adaf4bc271715418c48d2fa35dd950, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moneyTextContainer: {fileID: 632790618}
   moneyTextPrefab: {fileID: 4249227637495638497, guid: b32632cced0910e488d16d34c2cf3b0c,
     type: 3}
   placeholderPrefab: {fileID: 177002, guid: 429cf83408822554ba6a9a22ea1b5a0f, type: 3}
   itemcontainerPrefab: {fileID: 123714, guid: 36c89ef912cc358488246dcd1834eba5, type: 3}
   shelfGridTransform: {fileID: 1334878505}
+  moneyTextContainer: {fileID: 632790618}
   shelfPrice: 5
   money: 0
   levelProgress: 0
@@ -2784,7 +2784,7 @@ GameObject:
   - component: {fileID: 1140417012}
   - component: {fileID: 1140417013}
   m_Layer: 0
-  m_Name: ServerController
+  m_Name: ComputerController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

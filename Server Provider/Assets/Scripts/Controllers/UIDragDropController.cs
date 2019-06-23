@@ -49,7 +49,7 @@ public class UIDragDropController : MonoBehaviour
 
     private void OnItemDataBinding(object sender, ItemDataBindingEventArgs e)
     {
-        Server dataItem = e.Item as Server;
+        Computer dataItem = e.Item as Computer;
         if (dataItem != null)
         {
             TextMeshProUGUI tmp = e.ItemPresenter.GetComponentInChildren<TextMeshProUGUI>();
