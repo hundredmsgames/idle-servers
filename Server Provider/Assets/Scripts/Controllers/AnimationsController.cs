@@ -7,6 +7,7 @@ public class AnimationsController : MonoBehaviour
 {
     public Animator UpgradesPanelAnimator;
     public Animator RecycleBinAnimator;
+    public Animator computerManagamentAnimatorController;
     static public AnimationsController Instance;
     public Image CloseUpgradeablePanelButtonImage;
 
@@ -44,5 +45,10 @@ public class AnimationsController : MonoBehaviour
     {
         RecycleBinAnimator.SetBool("open", open);
         
+    }
+
+    public void ComputerManagamentOpenCloseAnim(bool open)
+    {
+        computerManagamentAnimatorController.SetBool("open", open);
     }
 }
