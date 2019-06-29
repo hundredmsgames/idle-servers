@@ -6,7 +6,7 @@ using System;
 
 namespace ControlToolkit
 {
-	public class ItemContainer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler 
+	public class ItemContainer : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
 		public static EventHandler BeginDrag;
 		public static EventHandler Drop;
@@ -90,11 +90,12 @@ namespace ControlToolkit
 		}
 		[SerializeField] Button BtnRemove;
 		[SerializeField] Button BtnAdd;
-
+        
 		void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
 		{
-            
-			if(!m_canDrag || !hasServer)
+            //Debug.Log("ItemContainer::OnPointerDown");
+
+            if (!m_canDrag || !hasServer)
 			{
 				return;
 			}
@@ -118,9 +119,11 @@ namespace ControlToolkit
 		
 		void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
 		{
+            //Debug.Log("ItemContainer::OnPointerUp");
+
             // ADDED 
             if (OnClick != null)
-                OnClick(this, eventData);
+                OnClick(this, eventData);            
 
 			if(!m_canDrag)
 			{
@@ -240,6 +243,8 @@ namespace ControlToolkit
 				transform.position = m_startPosition + (m_position - m_startPosition) * t;
 			}
 		}
-	}
+
+       
+    }
 }
 

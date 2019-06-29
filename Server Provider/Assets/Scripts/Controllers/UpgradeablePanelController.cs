@@ -12,10 +12,14 @@ public class UpgradeablePanelController : MonoBehaviour
     AnimationsController animationsController;
     public Dictionary<Computer, GameObject> serverToUpgradeContainer;
     Computer[] servers;
-
+    public static UpgradeablePanelController Instance;
     // Start is called before the first frame update
     void Start()
     {
+        if (Instance != null)
+            return;
+        
+        Instance = this;
         serverToUpgradeContainer = new Dictionary<Computer, GameObject>();
         animationsController = AnimationsController.Instance;
         GameController.Instance.LeveledUp += Player_LeveledUp;
@@ -30,7 +34,7 @@ public class UpgradeablePanelController : MonoBehaviour
             upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + proto.Name);
 
             Button btn = upgradeableGO.GetComponentInChildren<Button>();
-            btn.onClick.AddListener(() => { Plant(upgradeableGO, proto); });
+            btn.onClick.AddListener(() => { Plant(proto.Name); });
             if (proto.requiredLevel > GameController.Instance.level)
             {
                 btn.interactable = false;
@@ -68,37 +72,32 @@ public class UpgradeablePanelController : MonoBehaviour
 
     //we may need upgradeable panel objects with the servers 
     //Dictionary<server,gameobject> so when we plant a server then we can find the object and set the texts or other things easyly
-    public void Plant(object sender, Computer computer)
+    public void Plant(string computerName)
     {
-        Debug.Log(computer.Name + " is ready to plant");
-        
-        GameObject upgradeableGO = (GameObject)sender;
 
-        Computer copy = computer.Copy();
-        //this doesnt work yet
-        //we will add events to server about how to behave when this happen 
-        //then it will work
-        copy.PlantServer();
-
-        copy.Planted += ComputerPlanted;
-        copy.Planted += GameController.Instance.ComputerPlanted;
+        //Şuanda prototype ismini aldık ve bunun oluşturulması ve gerekli yerelre eklenmesi lazım 
+        if (DebugConfigs.DEBUG_LOG)
+            Debug.Log(computerName + " is ready to plant");
+        GameController.Instance.ComputerPlant(computerName);
+        //copy.Planted += ComputerPlanted;
+        //copy.Planted += GameController.Instance.ComputerPlanted;
         animationsController.UpgradesOpenCloseAnim(false);
     }
 
-    private void ComputerPlanted(Computer server)
+    public void ComputerPlanted(Computer computer)
     {
         //find the copied server in the upgradeable panel
         foreach (Computer servers in serverToUpgradeContainer.Keys)
         {
-            if (server.Name == servers.Name)
+            if (computer.Name == servers.Name)
             {
                 Button button = serverToUpgradeContainer[servers].GetComponentInChildren<Button>();
-                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(server.requiredMoneyForUpgrade);
+                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(computer.requiredMoneyForUpgrade);
                 button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => { UpgradeServerButtonClicked(serverToUpgradeContainer[servers], server); });
+                button.onClick.AddListener(() => { UpgradeServerButtonClicked(serverToUpgradeContainer[servers], computer); });
             }
         }
-        server.Upgraded += ComputerUpgraded;
+        computer.Upgraded += ComputerUpgraded;
     }
 
     private void UpgradeServerButtonClicked(object sender, Computer server)
@@ -108,8 +107,8 @@ public class UpgradeablePanelController : MonoBehaviour
             return;
 
         GameController.Instance.money -= server.requiredMoneyForUpgrade;
-        
-        server.UpgradeServer();   
+
+        server.UpgradeServer();
     }
 
     private void ComputerUpgraded(Computer server)
@@ -123,6 +122,6 @@ public class UpgradeablePanelController : MonoBehaviour
                 button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(server.requiredMoneyForUpgrade);
             }
         }
-        
+
     }
 }

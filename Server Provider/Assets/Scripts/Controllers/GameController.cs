@@ -23,7 +23,7 @@ public partial class GameController : MonoBehaviour
     public Transform moneyTextContainer;
 
     //public List<Computer> PlantableServerList { get; protected set; }
-
+    public List<ComputerController> computerControllers;
 
     List<Computer[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
@@ -62,6 +62,7 @@ public partial class GameController : MonoBehaviour
         ItemContainerToGO = new Dictionary<ItemContainer, GameObject>();
         ItemContainerToComputer = new Dictionary<ItemContainer, Computer>();
 
+        computerControllers = new List<ComputerController>();
         InitalizeComputerInfo();
         CreateComputerPrototypes();
 		CleanShelf();
@@ -144,9 +145,12 @@ public partial class GameController : MonoBehaviour
 
         // If we unlock the shelf while we are planting a server,
         // we should call PlantServer again thus new shelf can be updated.  
-        if (selectedComputer != null)
+        if (selectedComputerName != null)
         {
-            selectedComputer.PlantServer();
+
+            //HACK:do we need to handle this situtation like this?
+            //do not permit to unluck shelfs while planing computers maybe???
+            ShowHidePlantablePositions(true);
         }
         
         // We have enough money so just reduce the price from our money.

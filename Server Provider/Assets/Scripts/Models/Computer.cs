@@ -24,7 +24,7 @@ public class Computer
     int maxLevel = 10;
 
     public delegate void ComputerEventsHandler(Computer server);
-    public event ComputerEventsHandler Plant;
+    
     public event ComputerEventsHandler Planted;
     public event ComputerEventsHandler Upgraded;
     public event ComputerEventsHandler UpdateEvent;
@@ -43,7 +43,7 @@ public class Computer
             UpdateEvent = this.UpdateEvent,
             Upgraded = this.Upgraded,
             Planted = this.Planted,
-            Plant = this.Plant
+            
         };
 
         return copy;
@@ -72,12 +72,8 @@ public class Computer
         Upgraded?.Invoke(this);
     }
 
-    public void PlantServer()
-    {
-        Plant?.Invoke(this);
-    }
 
-    public void PlantedServer()
+    public void ComputerPlanted()
     {
         Planted?.Invoke(this);
     }

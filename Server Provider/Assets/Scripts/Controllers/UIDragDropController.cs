@@ -66,21 +66,37 @@ public class UIDragDropController : MonoBehaviour
 
         }
     }
-    public  void DragEnable()
+    public  void DragEnableDisable()
     {
        // Debug.Log("basıldı");
-        bool scrollEnabledisable = false;
+        bool scrollEnabled = false;
         foreach (ItemContainer item in GameController.Instance.ItemContainerToGO.Keys)
         {
+            //if item drag is enabled disable it and pass the info to scrollEnabled flag
             item.CanDrag = !item.CanDrag;
-            scrollEnabledisable = !item.CanDrag;
+            //if we can not drag drop items so scroll is disabled (set to false)
+            scrollEnabled = !item.CanDrag;
             //Debug.Log(item.CanDrag);
         }
-        scrollRect.vertical = scrollEnabledisable;
+        
+        scrollRect.vertical = scrollEnabled;
+
+        //FIXME: This code has to change this is for debugging
         if (scrollRect.vertical == false)
             dragEnabledScreen.GetComponent<Image>().color = Color.green;
         else
             dragEnabledScreen.GetComponent<Image>().color = Color.white;
+
+
+
+
+        AnimationsController.Instance.RecycleBinOpenCloseAnim(!scrollEnabled);
+
+        foreach (ComputerController computerController in GameController.Instance.computerControllers)
+        {
+            computerController.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = scrollEnabled;
+        }
+      
     }
     // Update is called once per frame
     void Update()
