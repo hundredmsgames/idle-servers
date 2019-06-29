@@ -22,7 +22,6 @@ public partial class GameController : MonoBehaviour
     public Transform shelfGridTransform;
     public Transform moneyTextContainer;
 
-    //public List<Computer> PlantableServerList { get; protected set; }
     public List<ComputerController> computerControllers;
 
     List<Computer[]> shelves;

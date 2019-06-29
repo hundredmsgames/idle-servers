@@ -91,16 +91,12 @@ public class UIDragDropController : MonoBehaviour
 
 
         AnimationsController.Instance.RecycleBinOpenCloseAnim(!scrollEnabled);
+        AnimationsController.Instance.UpgradesOpenCloseAnim(false);
 
         foreach (ComputerController computerController in GameController.Instance.computerControllers)
         {
             computerController.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = scrollEnabled;
         }
       
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
