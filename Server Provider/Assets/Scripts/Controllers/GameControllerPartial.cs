@@ -7,7 +7,12 @@ using UnityEngine.UI;
 public partial class GameController : MonoBehaviour
 {
     public GameObject computerPrefab;
+
+    // This is the selected computer to be planted.
     public string selectedComputerName;
+
+    // This is the computer that we want to put into archive
+    public Computer computerToBeArchived;
 
     public void ComputerPlanted(Computer computer)
     {
@@ -18,8 +23,6 @@ public partial class GameController : MonoBehaviour
         selectedComputerName = null;
     }
 
-
-
     public void ComputerPlant(string computerName)
     {
         if (DebugConfigs.DEBUG_LOG)
@@ -28,6 +31,7 @@ public partial class GameController : MonoBehaviour
         selectedComputerName = computerName;
         ShowHidePlantablePositions(true);
     }
+
     public void ShowHidePlantablePositions(bool show)
     {
         if (show == true)
@@ -64,6 +68,7 @@ public partial class GameController : MonoBehaviour
             }
         }
     }
+
     private void ItemContainer_OnClick(ItemContainer container, UnityEngine.EventSystems.PointerEventData pointerEventData)
     {
         if (DebugConfigs.DEBUG_LOG)
@@ -91,6 +96,11 @@ public partial class GameController : MonoBehaviour
 
         // After server planted selected server gets set to null so be carefull where you do this
         newComputer.ComputerPlanted();
+        
+    }
+
+    public void PutComputerToArchive()
+    {
         
     }
 }

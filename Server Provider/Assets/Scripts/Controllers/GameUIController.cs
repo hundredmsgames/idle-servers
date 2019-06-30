@@ -7,17 +7,34 @@ using ControlToolkit;
 
 public class GameUIController : MonoBehaviour
 {
+    public static GameUIController Instance;
+
+    public Animator UpgradesPanelAnimator;
+    public Animator archivedComputersAnimator;
+    public Animator computerManagamentAnimatorController;
+    public Image CloseUpgradeablePanelButtonImage;
+
     public TextMeshProUGUI currentshelfpriceText;
     public TextMeshProUGUI currentMoneyText;
-    public Image filledImage;
     public TextMeshProUGUI currentLevel;
+    public Image filledImage;
 
     public ScrollRect scrollRect;
     public GameObject dragEnabledScreen;
+    public GameObject computerManagamentPanel;
 
-    // Update is called once per frame
+    private void Start()
+    {
+        if (Instance != null)
+            return;
+
+        Instance = this;
+    }
+
     void Update()
     {
+        // FIXME: Probably we shouldn't update them in the update method.
+        // They could be triggered by an event maybe
         currentshelfpriceText.text ="Unluck " + Extensions.Format(GameController.Instance.shelfPrice);
         currentMoneyText.text = Extensions.Format(GameController.Instance.money);
         filledImage.fillAmount = GameController.Instance.levelProgress;
@@ -49,12 +66,49 @@ public class GameUIController : MonoBehaviour
         else
             dragEnabledScreen.GetComponent<Image>().color = Color.white;
 
-        AnimationsController.Instance.RecycleBinOpenCloseAnim(!scrollEnabled);
-        AnimationsController.Instance.UpgradesOpenCloseAnim(false);
+        ArchivedComputersOpenCloseAnim(!scrollEnabled);
+        UpgradesOpenCloseAnim(false);
 
         foreach (ComputerController computerController in GameController.Instance.computerControllers)
         {
             computerController.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = scrollEnabled;
         }
+    }
+
+    public void ShowComputerManagamentPanel(GameObject computerController)
+    {
+        ComputerManagamentOpenCloseAnim(true);
+        computerManagamentPanel.transform.position = computerController.transform.position;
+        CloseUpgradeablePanelButtonImage.raycastTarget = true;
+    }
+
+    public void HideComputerManagamentPanel()
+    {
+        ComputerManagamentOpenCloseAnim(false);
+        CloseUpgradeablePanelButtonImage.raycastTarget = false;
+    }
+
+    public void UpgradesOpenCloseAnim(bool open)
+    {
+        UpgradesPanelAnimator.SetBool("panelOpenCloseState", open);
+        if (open)
+        {
+            GameController.Instance.ShowHidePlantablePositions(false);
+        }
+        else
+        {
+            //set CloseUpgradeablepanelButton raycast=false
+            CloseUpgradeablePanelButtonImage.raycastTarget = false;
+        }
+    }
+
+    public void ArchivedComputersOpenCloseAnim(bool open)
+    {
+        archivedComputersAnimator.SetBool("open", open);
+    }
+
+    public void ComputerManagamentOpenCloseAnim(bool open)
+    {
+        computerManagamentAnimatorController.SetBool("open", open);
     }
 }

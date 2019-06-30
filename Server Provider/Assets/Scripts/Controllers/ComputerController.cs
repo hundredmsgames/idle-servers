@@ -15,12 +15,6 @@ public class ComputerController : MonoBehaviour, IPointerDownHandler, IPointerUp
     float animationStartTime = 0.3f;
     bool animationStarted = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -30,13 +24,14 @@ public class ComputerController : MonoBehaviour, IPointerDownHandler, IPointerUp
         timePassed += Time.deltaTime;
         if (maxTime < timePassed)
         {
+            Debug.Log("you are still touching" + computer.Name);
+
             continuesTouchStarted = false;
             timePassed = 0;
 
             ///this is the part we will do what ever we want
-            AnimationsController.Instance.ComputerManagamentOpenCloseAnim(true);
-
-            Debug.Log("you are still touching"+ computer.Name);
+            GameUIController.Instance.ShowComputerManagamentPanel(this.gameObject);
+            GameController.Instance.computerToBeArchived = this.computer;  
         }
 
         if (animationStarted == false && animationStartTime < timePassed)

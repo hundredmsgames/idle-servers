@@ -896,53 +896,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 303105107}
   m_CullTransparentMesh: 0
---- !u!1 &306851382
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 306851383}
-  - component: {fileID: 306851384}
-  m_Layer: 0
-  m_Name: AnimationsController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &306851383
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 306851382}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 440037906}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &306851384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 306851382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbacf1f4466674f41beb52dae05c6823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UpgradesPanelAnimator: {fileID: 1274649195}
-  RecycleBinAnimator: {fileID: 876189156}
-  computerManagamentAnimatorController: {fileID: 73413296}
-  CloseUpgradeablePanelButtonImage: {fileID: 1103679417}
 --- !u!1 &336331224
 GameObject:
   m_ObjectHideFlags: 0
@@ -1402,7 +1355,6 @@ Transform:
   m_Children:
   - {fileID: 1506842203}
   - {fileID: 965834289}
-  - {fileID: 306851383}
   - {fileID: 2035184698}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1827,7 +1779,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 306851384}
+      - m_Target: {fileID: 1506842205}
         m_MethodName: UpgradesOpenCloseAnim
         m_Mode: 6
         m_Arguments:
@@ -2373,7 +2325,7 @@ GameObject:
   - component: {fileID: 876189157}
   - component: {fileID: 876189156}
   m_Layer: 5
-  m_Name: RecycleBin
+  m_Name: ArchiveButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3124,7 +3076,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 306851384}
+      - m_Target: {fileID: 1506842205}
         m_MethodName: UpgradesOpenCloseAnim
         m_Mode: 6
         m_Arguments:
@@ -3138,6 +3090,17 @@ MonoBehaviour:
       - m_Target: {fileID: 1103679417}
         m_MethodName: set_raycastTarget
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1506842205}
+        m_MethodName: HideComputerManagamentPanel
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3343,7 +3306,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 306851384}
+      - m_Target: {fileID: 0}
         m_MethodName: UpgradesOpenCloseAnim
         m_Mode: 6
         m_Arguments:
@@ -3540,7 +3503,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -59.200012}
+  m_AnchoredPosition: {x: 0, y: -59.19995}
   m_SizeDelta: {x: 0, y: -118.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1183689796
@@ -4404,12 +4367,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 326dd5f0b4c226e44b5b440ee4d1fd7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UpgradesPanelAnimator: {fileID: 1274649195}
+  archivedComputersAnimator: {fileID: 876189156}
+  computerManagamentAnimatorController: {fileID: 73413296}
+  CloseUpgradeablePanelButtonImage: {fileID: 1103679417}
   currentshelfpriceText: {fileID: 416673290}
   currentMoneyText: {fileID: 2124141841}
-  filledImage: {fileID: 222635696}
   currentLevel: {fileID: 244372676}
+  filledImage: {fileID: 222635696}
   scrollRect: {fileID: 1183689798}
   dragEnabledScreen: {fileID: 1058362517}
+  computerManagamentPanel: {fileID: 1870693332}
 --- !u!1 &1551499860
 GameObject:
   m_ObjectHideFlags: 0
@@ -5296,7 +5264,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 440037906}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2035184699
 MonoBehaviour:

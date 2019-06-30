@@ -9,7 +9,6 @@ public class UpgradeablePanelController : MonoBehaviour
 {
     public Transform parentObjectTransform;
     public GameObject upgradeablePrefab;
-    AnimationsController animationsController;
     public Dictionary<Computer, GameObject> serverToUpgradeContainer;
     Computer[] servers;
     public static UpgradeablePanelController Instance;
@@ -21,7 +20,6 @@ public class UpgradeablePanelController : MonoBehaviour
         
         Instance = this;
         serverToUpgradeContainer = new Dictionary<Computer, GameObject>();
-        animationsController = AnimationsController.Instance;
         GameController.Instance.LeveledUp += Player_LeveledUp;
 
         foreach (ComputerInfo computerInfo in GameController.Instance.nameToComputerInfo.Values)
@@ -81,7 +79,7 @@ public class UpgradeablePanelController : MonoBehaviour
         GameController.Instance.ComputerPlant(computerName);
         //copy.Planted += ComputerPlanted;
         //copy.Planted += GameController.Instance.ComputerPlanted;
-        animationsController.UpgradesOpenCloseAnim(false);
+        GameUIController.Instance.UpgradesOpenCloseAnim(false);
     }
 
     public void ComputerPlanted(Computer computer)
