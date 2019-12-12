@@ -20,8 +20,8 @@ public class Computer
     // Required money to make this server upgradable.
     public int requiredMoneyForUpgrade;
 
-    // Maximum level that server can reach.
-    int maxLevel = 10;
+    // (Maximum level that server can reach) - 1.
+    int maxLevel = 4;
 
     public delegate void ComputerEventsHandler(Computer server);
     
@@ -61,7 +61,7 @@ public class Computer
         mps += 1;
         requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.1f);
 
-        if (currLevel >= maxLevel)
+        if (currLevel > maxLevel)
         {
             // We need to notify the dictionary in the GameController that
             // we can setup a new server of this now.

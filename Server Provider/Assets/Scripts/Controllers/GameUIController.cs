@@ -79,6 +79,7 @@ public class GameUIController : MonoBehaviour
     {
         ComputerManagamentOpenCloseAnim(true);
         computerManagamentPanel.transform.position = computerController.transform.position;
+        computerManagamentPanel.transform.Translate(0, 150, 0);
         CloseUpgradeablePanelButtonImage.raycastTarget = true;
     }
 
@@ -94,6 +95,7 @@ public class GameUIController : MonoBehaviour
         if (open)
         {
             GameController.Instance.ShowHidePlantablePositions(false);
+            HideComputerManagamentPanel();
         }
         else
         {
@@ -110,5 +112,10 @@ public class GameUIController : MonoBehaviour
     public void ComputerManagamentOpenCloseAnim(bool open)
     {
         computerManagamentAnimatorController.SetBool("open", open);
+    }
+    
+    public void PutComputerToArchiveButton_OnClick()
+    {
+        GameController.Instance.PutComputerToArchive();
     }
 }

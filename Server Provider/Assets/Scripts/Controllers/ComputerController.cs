@@ -10,7 +10,7 @@ public class ComputerController : MonoBehaviour, IPointerDownHandler, IPointerUp
     //time passed after we start touching the object
     float timePassed = 0;
     //maximum time for pressing object that we are on
-    float maxTime = 1.3f;
+    float maxTime = 1f;
     //animation will start to play afer 0.X seconds
     float animationStartTime = 0.3f;
     bool animationStarted = false;

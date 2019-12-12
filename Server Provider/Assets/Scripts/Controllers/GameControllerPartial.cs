@@ -101,6 +101,7 @@ public partial class GameController : MonoBehaviour
 
     public void PutComputerToArchive()
     {
-        
+        Debug.Log(computerToBeArchived.Name);
+
     }
 }

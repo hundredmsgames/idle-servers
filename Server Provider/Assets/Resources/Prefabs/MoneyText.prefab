@@ -251,6 +251,7 @@ GameObject:
   - component: {fileID: 4249227637495638496}
   - component: {fileID: 4249227637495638499}
   - component: {fileID: 4249227637495638498}
+  - component: {fileID: 6003544888615820298}
   m_Layer: 5
   m_Name: MoneyText
   m_TagString: Untagged
@@ -299,3 +300,15 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4249227637495638497}
   m_CullTransparentMesh: 0
+--- !u!225 &6003544888615820298
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4249227637495638497}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
