@@ -9,27 +9,28 @@ public class UpgradeablePanelController : MonoBehaviour
 {
     public Transform parentObjectTransform;
     public GameObject upgradeablePrefab;
-    public Dictionary<Computer, GameObject> serverToUpgradeContainer;
-    Computer[] servers;
+    public Dictionary<Item, GameObject> itemToUpgradeContainer;
+    Item[] items;
     public static UpgradeablePanelController Instance;
     // Start is called before the first frame update
     void Start()
     {
         if (Instance != null)
             return;
-        
+
         Instance = this;
-        serverToUpgradeContainer = new Dictionary<Computer, GameObject>();
+        itemToUpgradeContainer = new Dictionary<Item, GameObject>();
         GameController.Instance.LeveledUp += Player_LeveledUp;
 
-        foreach (ComputerInfo computerInfo in GameController.Instance.nameToComputerInfo.Values)
+        foreach (ItemInfo itemInfo in GameController.Instance.nameToItemInfo.Values)
         {
-            Computer proto = computerInfo.computerProto;
+            Item proto = itemInfo.item;
 
             GameObject upgradeableGO = Instantiate(upgradeablePrefab);
             upgradeableGO.transform.SetParent(parentObjectTransform, false);
             upgradeableGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = proto.Name;
             upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + proto.Name);
+            Debug.Log(proto.Name);
 
             Button btn = upgradeableGO.GetComponentInChildren<Button>();
             btn.onClick.AddListener(() => { Plant(proto.Name); });
@@ -39,9 +40,9 @@ public class UpgradeablePanelController : MonoBehaviour
                 btn.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Required Level " + proto.requiredLevel;
             }
 
-            serverToUpgradeContainer.Add(proto, upgradeableGO);
+            itemToUpgradeContainer.Add(proto, upgradeableGO);
 
-            //we need to set behaviour of this upgradeable or plantable server objects
+            //we need to set behaviour of this upgradeable or plantable Item objects
             //for example is this object active?
             //is this upgradeable or plantable
             //yerleştirilmiş ve son seviyeye kadar geliştirilmiş objeler nasıl davranacak?
@@ -55,11 +56,11 @@ public class UpgradeablePanelController : MonoBehaviour
 
     private void Player_LeveledUp(int level)
     {
-        foreach (Computer server in serverToUpgradeContainer.Keys)
+        foreach (Item item in itemToUpgradeContainer.Keys)
         {
-            if (server.requiredLevel <= GameController.Instance.level)
+            if (item.requiredLevel <= GameController.Instance.level)
             {
-                Button button = serverToUpgradeContainer[server].GetComponentInChildren<Button>();
+                Button button = itemToUpgradeContainer[item].GetComponentInChildren<Button>();
                 if (button.interactable == false)
                     button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Plant";
 
@@ -68,56 +69,56 @@ public class UpgradeablePanelController : MonoBehaviour
         }
     }
 
-    //we may need upgradeable panel objects with the servers 
-    //Dictionary<server,gameobject> so when we plant a server then we can find the object and set the texts or other things easyly
-    public void Plant(string computerName)
+    //we may need upgradeable panel objects with the Items 
+    //Dictionary<Item,gameobject> so when we plant a Item then we can find the object and set the texts or other things easyly
+    public void Plant(string ItemName)
     {
 
         //Şuanda prototype ismini aldık ve bunun oluşturulması ve gerekli yerelre eklenmesi lazım 
         if (DebugConfigs.DEBUG_LOG)
-            Debug.Log(computerName + " is ready to plant");
-        GameController.Instance.ComputerPlant(computerName);
-        //copy.Planted += ComputerPlanted;
-        //copy.Planted += GameController.Instance.ComputerPlanted;
+            Debug.Log(ItemName + " is ready to plant");
+        GameController.Instance.itemPlant(ItemName);
+        //copy.Planted += ItemPlanted;
+        //copy.Planted += GameController.Instance.ItemPlanted;
         GameUIController.Instance.UpgradesOpenCloseAnim(false);
     }
 
-    public void ComputerPlanted(Computer computer)
+    public void ItemPlanted(Item item)
     {
-        //find the copied server in the upgradeable panel
-        foreach (Computer servers in serverToUpgradeContainer.Keys)
+        //find the copied Item in the upgradeable panel
+        foreach (Item itemUpgradeable in itemToUpgradeContainer.Keys)
         {
-            if (computer.Name == servers.Name)
+            if (item.Name == itemUpgradeable.Name)
             {
-                Button button = serverToUpgradeContainer[servers].GetComponentInChildren<Button>();
-                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(computer.requiredMoneyForUpgrade);
+                Button button = itemToUpgradeContainer[itemUpgradeable].GetComponentInChildren<Button>();
+                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(item.requiredMoneyForUpgrade);
                 button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => { UpgradeServerButtonClicked(serverToUpgradeContainer[servers], computer); });
+                button.onClick.AddListener(() => { UpgradeItemButtonClicked(itemToUpgradeContainer[itemUpgradeable], item as Item); });
             }
         }
-        computer.Upgraded += ComputerUpgraded;
+        item.Upgraded += ItemUpgraded;
     }
 
-    private void UpgradeServerButtonClicked(object sender, Computer server)
+    private void UpgradeItemButtonClicked(object sender, Item item)
     {
-        Debug.Log(server.Name + " UpgradeablePanelController::UpgradeServer");
-        if (GameController.Instance.money - server.requiredMoneyForUpgrade < 0)
+        Debug.Log(item.Name + " UpgradeablePanelController::UpgradeItem");
+        if (GameController.Instance.money - item.requiredMoneyForUpgrade < 0)
             return;
 
-        GameController.Instance.money -= server.requiredMoneyForUpgrade;
+        GameController.Instance.money -= item.requiredMoneyForUpgrade;
 
-        server.UpgradeServer();
+        item.Upgrade();
     }
 
-    private void ComputerUpgraded(Computer server)
+    private void ItemUpgraded(Item item)
     {
-        Debug.Log("UpgradeablePanelController::ComputerUpgraded");
-        foreach (Computer servers in serverToUpgradeContainer.Keys)
+        Debug.Log("UpgradeablePanelController::ItemUpgraded");
+        foreach (Item itemUpgradeable in itemToUpgradeContainer.Keys)
         {
-            if (server.Name == servers.Name)
+            if (item.Name == itemUpgradeable.Name)
             {
-                Button button = serverToUpgradeContainer[servers].GetComponentInChildren<Button>();
-                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(server.requiredMoneyForUpgrade);
+                Button button = itemToUpgradeContainer[itemUpgradeable].GetComponentInChildren<Button>();
+                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(item.requiredMoneyForUpgrade);
             }
         }
 

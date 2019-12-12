@@ -16,7 +16,7 @@ namespace ControlToolkit
 
         public static EventHandler Add;
 
-        public bool hasServer = false;
+        public bool hasItem = false;
 
         // ADDED
         public delegate void ClickHandler(ItemContainer container, PointerEventData pointerEventData);
@@ -71,7 +71,7 @@ namespace ControlToolkit
         {
             //Debug.Log("ItemContainer::OnPointerDown");
 
-            if (!m_canDrag || !hasServer)
+            if (!m_canDrag || !hasItem)
             {
                 return;
             }

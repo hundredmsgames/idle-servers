@@ -12,9 +12,9 @@ public partial class GameController : MonoBehaviour
 
     // We can use one dictionary here.
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
-    public Dictionary<ItemContainer, Computer> ItemContainerToComputer;
-    public Dictionary<Computer, GameObject> plantedServersToGOs;
-    public Dictionary<string, ComputerInfo> nameToComputerInfo;
+    public Dictionary<ItemContainer, Item> ItemContainerToitem;
+    public Dictionary<Item, GameObject> planteditemsToGOs;
+    public Dictionary<string, ItemInfo> nameToItemInfo;
 
     public GameObject moneyTextPrefab;
     public GameObject placeholderPrefab;
@@ -22,9 +22,9 @@ public partial class GameController : MonoBehaviour
     public Transform shelfGridTransform;
     public Transform moneyTextContainer;
 
-    public List<ComputerController> computerControllers;
+    public List<ItemController> ItemControllers;
 
-    List<Computer[]> shelves;
+    List<Item[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
 
     public delegate void LevelHandler(int level);
@@ -33,7 +33,7 @@ public partial class GameController : MonoBehaviour
 
     // Start is called before the first frame update
     // every row(shelf) has 4 tiles
-    int serverCountInRow = 4;
+    int ItemCountInRow = 4;
 
     //Game Logic Variables
     int shelfCount = 1;
@@ -43,82 +43,83 @@ public partial class GameController : MonoBehaviour
     public int level = 1;
 
     //whenever we use a power up we can set this multiplier to any power of 10
-    float levelProgressMultiplier=30;
+    float levelProgressMultiplier = 30;
     float levelProgressPerSecond = 0.01f;
 
 
     private void OnEnable()
     {
         if (Instance != null)
-			return;
-        
-		Instance = this;
-        shelves = new List<Computer[]>();
-        
-		// instantiate planted servers to game object dictionary
-        // this will store all server models that planted and link them to the game objects in the game
-        plantedServersToGOs = new Dictionary<Computer, GameObject>();
+            return;
+
+        Instance = this;
+        shelves = new List<Item[]>();
+
+        // instantiate planted Items to game object dictionary
+        // this will store all Item models that planted and link them to the game objects in the game
+        planteditemsToGOs = new Dictionary<Item, GameObject>();
         ItemContainerToGO = new Dictionary<ItemContainer, GameObject>();
-        ItemContainerToComputer = new Dictionary<ItemContainer, Computer>();
+        ItemContainerToitem = new Dictionary<ItemContainer, Item>();
 
-        computerControllers = new List<ComputerController>();
-        InitalizeComputerInfo();
-        CreateComputerPrototypes();
-		CleanShelf();
-		CreateShelf();
+        ItemControllers = new List<ItemController>();
+        InitalizeItemInfo();
+        CreateItemPrototypes();
+        CleanShelf();
+        CreateShelf();
     }
 
-    private void InitalizeComputerInfo()
+    private void InitalizeItemInfo()
     {
-        nameToComputerInfo = new Dictionary<string, ComputerInfo>();
+        nameToItemInfo = new Dictionary<string, ItemInfo>();
 
-        // For now we just use hardcoded names for computers
-        // e.g. Computer 0, Computer 1
+        // For now we just use hardcoded names for Items
+        // e.g. Item 0, Item 1
         for (int i = 0; i < 5; i++)
-            nameToComputerInfo.Add("Computer" + i,  new ComputerInfo());
+            nameToItemInfo.Add("Computer" + i, new ItemInfo());
     }
 
-    private void CreateComputerPrototypes()
+    private void CreateItemPrototypes()
     {
-        Computer computer;
+        Item Item;
         for (int i = 0; i < 5; i++)
         {
-            computer = new Computer() {
+            Item = new Computer()
+            {
                 Name = "Computer" + i,
                 mps = i + 1,
                 requiredLevel = (2 * i + 1),
                 requiredMoneyForUpgrade = 30
             };
 
-            nameToComputerInfo["Computer" + i].computerProto = computer;
+            nameToItemInfo["Computer" + i].item = Item;
         }
     }
 
     // Maybe this method deserves a better name idk.
-    private void FillComputerInfo()
+    private void FillItemInfo()
     {
-        // Need to read canSetup and numberOfComputer info of every computer.
+        // Need to read canSetup and numberOfItem info of every Item.
     }
 
-	// Clean shelves before executing.
-	void CleanShelf()
-	{
-		if(DebugConfigs.RESET_UI)
-		{
-			foreach(Transform placeholder in shelfGridTransform)
-			{
-				ItemContainer container = placeholder.GetComponentInChildren<ItemContainer>();
-				if(container != null)
-				{
-					Destroy(container.gameObject);
-				}
-			}
-		}
-	}
+    // Clean shelves before executing.
+    void CleanShelf()
+    {
+        if (DebugConfigs.RESET_UI)
+        {
+            foreach (Transform placeholder in shelfGridTransform)
+            {
+                ItemContainer container = placeholder.GetComponentInChildren<ItemContainer>();
+                if (container != null)
+                {
+                    Destroy(container.gameObject);
+                }
+            }
+        }
+    }
 
     void CreateShelf()
     {
-        for (int i = 0; i < serverCountInRow; i++)
+        for (int i = 0; i < ItemCountInRow; i++)
         {
             GameObject placeHolderGO = (GameObject)Instantiate(placeholderPrefab);
             placeHolderGO.transform.SetParent(shelfGridTransform, false);
@@ -128,7 +129,7 @@ public partial class GameController : MonoBehaviour
             ItemContainer itemContainer = itemcontainerGO.GetComponent<ItemContainer>();
             itemContainer.CanDrag = false;
             ItemContainerToGO.Add(itemContainer, itemcontainerGO);
-            ItemContainerToComputer.Add(itemContainer, null);
+            ItemContainerToitem.Add(itemContainer, null);
         }
     }
 
@@ -142,16 +143,16 @@ public partial class GameController : MonoBehaviour
         // Create the new shelf, placeholders, item containers etc.
         CreateShelf();
 
-        // If we unlock the shelf while we are planting a server,
-        // we should call PlantServer again thus new shelf can be updated.  
-        if (selectedComputerName != null)
+        // If we unlock the shelf while we are planting a Item,
+        // we should call PlantItem again thus new shelf can be updated.  
+        if (selecteditem != null)
         {
 
             //HACK:do we need to handle this situtation like this?
-            //do not permit to unluck shelfs while planing computers maybe???
+            //do not permit to unluck shelfs while planing Items maybe???
             ShowHidePlantablePositions(true);
         }
-        
+
         // We have enough money so just reduce the price from our money.
         money = money - shelfPrice;
 
@@ -174,13 +175,13 @@ public partial class GameController : MonoBehaviour
         {
             time = 0f;
 
-            if (plantedServersToGOs.Count == 0)
+            if (planteditemsToGOs.Count == 0)
                 return;
 
-            foreach (Computer server in plantedServersToGOs.Keys)
+            foreach (Item Item in planteditemsToGOs.Keys)
             {
-                server.Update();
-            }            
+                Item.Update();
+            }
 
             levelProgress += levelProgressPerSecond * levelProgressMultiplier;
 
@@ -193,23 +194,23 @@ public partial class GameController : MonoBehaviour
         }
     }
 
-    public void ServerUpdate(Computer server)
+    public void ItemUpdate(Item item)
     {
         //earn money
-        money += server.ProduceMoney();
+        money += item.Produce();
 
         // create a money text game object
         GameObject moneyTextGO = Instantiate(moneyTextPrefab);
         moneyTextGO.transform.SetParent(moneyTextContainer, false);
 
-        moneyTextGO.transform.position = plantedServersToGOs[server].transform.position + Vector3.up * 40f;
+        moneyTextGO.transform.position = planteditemsToGOs[item as Item].transform.position + Vector3.up * 40f;
 
-        moneyTextGO.GetComponentInChildren<TextMeshProUGUI>().text = server.mps.ToString();
+        moneyTextGO.GetComponentInChildren<TextMeshProUGUI>().text = item.mps.ToString();
 
         //level progress
         //FIXME : 0.01 is hard coded turn it to a variable and change the value with power ups
-       
-       
+
+
     }
 
     void OnApplicationPause()

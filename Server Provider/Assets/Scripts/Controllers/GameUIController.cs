@@ -10,8 +10,8 @@ public class GameUIController : MonoBehaviour
     public static GameUIController Instance;
 
     public Animator UpgradesPanelAnimator;
-    public Animator archivedComputersAnimator;
-    public Animator computerManagamentAnimatorController;
+    public Animator archivedItemsAnimator;
+    public Animator ItemManagamentAnimatorController;
     public Image CloseUpgradeablePanelButtonImage;
 
     public TextMeshProUGUI currentshelfpriceText;
@@ -21,7 +21,7 @@ public class GameUIController : MonoBehaviour
 
     public ScrollRect scrollRect;
     public GameObject dragEnabledScreen;
-    public GameObject computerManagamentPanel;
+    public GameObject ItemManagamentPanel;
 
     private void Start()
     {
@@ -35,10 +35,10 @@ public class GameUIController : MonoBehaviour
     {
         // FIXME: Probably we shouldn't update them in the update method.
         // They could be triggered by an event maybe
-        currentshelfpriceText.text ="Unluck " + Extensions.Format(GameController.Instance.shelfPrice);
+        currentshelfpriceText.text = "Unluck " + Extensions.Format(GameController.Instance.shelfPrice);
         currentMoneyText.text = Extensions.Format(GameController.Instance.money);
         filledImage.fillAmount = GameController.Instance.levelProgress;
-        currentLevel.text ="Level "+ GameController.Instance.level.ToString() ;
+        currentLevel.text = "Level " + GameController.Instance.level.ToString();
     }
 
     public void UnlockShelf()
@@ -66,26 +66,26 @@ public class GameUIController : MonoBehaviour
         else
             dragEnabledScreen.GetComponent<Image>().color = Color.white;
 
-        ArchivedComputersOpenCloseAnim(!scrollEnabled);
+        ArchivedItemsOpenCloseAnim(!scrollEnabled);
         UpgradesOpenCloseAnim(false);
 
-        foreach (ComputerController computerController in GameController.Instance.computerControllers)
+        foreach (ItemController ItemController in GameController.Instance.ItemControllers)
         {
-            computerController.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = scrollEnabled;
+            ItemController.gameObject.GetComponent<CanvasGroup>().blocksRaycasts = scrollEnabled;
         }
     }
 
-    public void ShowComputerManagamentPanel(GameObject computerController)
+    public void ShowItemManagamentPanel(GameObject ItemController)
     {
-        ComputerManagamentOpenCloseAnim(true);
-        computerManagamentPanel.transform.position = computerController.transform.position;
-        computerManagamentPanel.transform.Translate(0, 150, 0);
+        ItemManagamentOpenCloseAnim(true);
+        ItemManagamentPanel.transform.position = ItemController.transform.position;
+        ItemManagamentPanel.transform.Translate(0, 150, 0);
         CloseUpgradeablePanelButtonImage.raycastTarget = true;
     }
 
-    public void HideComputerManagamentPanel()
+    public void HideItemManagamentPanel()
     {
-        ComputerManagamentOpenCloseAnim(false);
+        ItemManagamentOpenCloseAnim(false);
         CloseUpgradeablePanelButtonImage.raycastTarget = false;
     }
 
@@ -95,7 +95,7 @@ public class GameUIController : MonoBehaviour
         if (open)
         {
             GameController.Instance.ShowHidePlantablePositions(false);
-            HideComputerManagamentPanel();
+            HideItemManagamentPanel();
         }
         else
         {
@@ -104,18 +104,18 @@ public class GameUIController : MonoBehaviour
         }
     }
 
-    public void ArchivedComputersOpenCloseAnim(bool open)
+    public void ArchivedItemsOpenCloseAnim(bool open)
     {
-        archivedComputersAnimator.SetBool("open", open);
+        archivedItemsAnimator.SetBool("open", open);
     }
 
-    public void ComputerManagamentOpenCloseAnim(bool open)
+    public void ItemManagamentOpenCloseAnim(bool open)
     {
-        computerManagamentAnimatorController.SetBool("open", open);
+        ItemManagamentAnimatorController.SetBool("open", open);
     }
-    
-    public void PutComputerToArchiveButton_OnClick()
+
+    public void PutItemToArchiveButton_OnClick()
     {
-        GameController.Instance.PutComputerToArchive();
+        GameController.Instance.PutItemToArchive();
     }
 }

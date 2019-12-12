@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ComputerController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class ItemController : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    public Computer computer;
+    public Item item;
     bool continuesTouchStarted;
     //time passed after we start touching the object
     float timePassed = 0;
@@ -24,14 +24,14 @@ public class ComputerController : MonoBehaviour, IPointerDownHandler, IPointerUp
         timePassed += Time.deltaTime;
         if (maxTime < timePassed)
         {
-            Debug.Log("you are still touching" + computer.Name);
+            Debug.Log("you are still touching" + item.Name);
 
             continuesTouchStarted = false;
             timePassed = 0;
 
             ///this is the part we will do what ever we want
-            GameUIController.Instance.ShowComputerManagamentPanel(this.gameObject);
-            GameController.Instance.computerToBeArchived = this.computer;  
+            GameUIController.Instance.ShowItemManagamentPanel(this.gameObject);
+            GameController.Instance.itemToBeArchived = this.item;
         }
 
         if (animationStarted == false && animationStartTime < timePassed)
@@ -46,13 +46,13 @@ public class ComputerController : MonoBehaviour, IPointerDownHandler, IPointerUp
     {
         continuesTouchStarted = true;
         timePassed = 0;
-        // Debug.Log("ComputerController::OnPointerDown");
+        // Debug.Log("ItemController::OnPointerDown");
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        //Debug.Log("ComputerController::OnPointerUp");
-        computer.Update();
+        //Debug.Log("ItemController::OnPointerUp");
+        item.Update();
         animationStarted = false;
         continuesTouchStarted = false;
     }

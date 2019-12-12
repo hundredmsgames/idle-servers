@@ -160,9 +160,9 @@ namespace ControlToolkit
             }
         }
 
-        public void SetupServer(ItemPlaceholder itemPlaceholder)
+        public void SetupItem(ItemPlaceholder itemPlaceholder)
         {
-            //when we setup a server this function handles the setup
+            //when we setup a Item this function handles the setup
         }
 
         private void DataBind()

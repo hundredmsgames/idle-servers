@@ -2886,14 +2886,13 @@ MonoBehaviour:
   itemcontainerPrefab: {fileID: 123714, guid: 36c89ef912cc358488246dcd1834eba5, type: 3}
   shelfGridTransform: {fileID: 1334878505}
   moneyTextContainer: {fileID: 632790618}
-  computerControllers: []
+  ItemControllers: []
   shelfPrice: 5
   money: 0
   levelProgress: 0
   level: 1
-  computerPrefab: {fileID: 8834888243566853204, guid: e1f416a23f385cc49ab97bd24350aa3a,
-    type: 3}
-  selectedComputerName: 
+  itemPrefab: {fileID: 0}
+  selecteditem: 
 --- !u!1 &1058362517
 GameObject:
   m_ObjectHideFlags: 0
@@ -4379,8 +4378,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpgradesPanelAnimator: {fileID: 1274649195}
-  archivedComputersAnimator: {fileID: 876189156}
-  computerManagamentAnimatorController: {fileID: 73413296}
+  archivedItemsAnimator: {fileID: 0}
+  ItemManagamentAnimatorController: {fileID: 0}
   CloseUpgradeablePanelButtonImage: {fileID: 1103679417}
   currentshelfpriceText: {fileID: 416673290}
   currentMoneyText: {fileID: 2124141841}
@@ -4388,7 +4387,7 @@ MonoBehaviour:
   filledImage: {fileID: 222635696}
   scrollRect: {fileID: 1183689798}
   dragEnabledScreen: {fileID: 1058362517}
-  computerManagamentPanel: {fileID: 1870693332}
+  ItemManagamentPanel: {fileID: 0}
 --- !u!1 &1551499860
 GameObject:
   m_ObjectHideFlags: 0

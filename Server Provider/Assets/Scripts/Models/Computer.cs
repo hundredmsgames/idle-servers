@@ -2,60 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Computer
+public class Computer : Item
 {
-    // Name of the server
-    public string Name { get; set; }
-    
-    // Current level of the server.
-    public int currLevel = 1;
 
-    // To make this server plantable game level should be
-    // equal or above the requiredLevel.
-    public int requiredLevel;
-
-    // Produced money per second for this server.
-    public int mps;
-
-    // Required money to make this server upgradable.
-    public int requiredMoneyForUpgrade;
-
-    // (Maximum level that server can reach) - 1.
-    int maxLevel = 4;
-
-    public delegate void ComputerEventsHandler(Computer server);
-    
-    public event ComputerEventsHandler Planted;
-    public event ComputerEventsHandler Upgraded;
-    public event ComputerEventsHandler UpdateEvent;
-
-    public Computer Copy()
-    {
-        Computer copy = new Computer() {
-            Name = this.Name,
-            mps = this.mps,
-            currLevel = this.currLevel,
-            maxLevel = this.maxLevel,
-            requiredLevel = this.requiredLevel,
-            requiredMoneyForUpgrade = this.requiredMoneyForUpgrade,
-            
-            // Events
-            UpdateEvent = this.UpdateEvent,
-            Upgraded = this.Upgraded,
-            Planted = this.Planted,
-            
-        };
-
-        return copy;
-    }
-
-    // every second this server produces money
-    public int ProduceMoney()
-    {
-        return mps;
-    }
-
-    public void UpgradeServer()
+    public override void Upgrade()
     {
         currLevel++;
         mps += 1;
@@ -69,18 +19,11 @@ public class Computer
             //setupNewServer = true;
         }
 
-        Upgraded?.Invoke(this);
+        base.Upgrade();
     }
-
-
-    public void ComputerPlanted()
+    public override int Produce()
     {
-        Planted?.Invoke(this);
-    }
-
-    public void Update()
-    {
-        UpdateEvent?.Invoke(this);
+        return mps;
     }
 
     //we need to tell to upgradeable & plantable objects to what to do
