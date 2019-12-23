@@ -1,5 +1,6 @@
 ﻿using ControlToolkit;
 using System.Collections.Generic;
+using Models;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -82,7 +83,7 @@ public partial class GameController : MonoBehaviour
         if (DebugConfigs.DEBUG_LOG)
             Debug.Log("Update event added to Item.");
 
-        Item item = nameToItemInfo[selecteditem].item.Copy();
+        Item item = ItemPrototype.GetItemInfo(selecteditem).item.Clone() as Item;
         item.Planted += itemPlanted;
         item.Planted += UpgradeablePanelController.Instance.ItemPlanted;
         item.UpdateEvent += Instance.ItemUpdate;

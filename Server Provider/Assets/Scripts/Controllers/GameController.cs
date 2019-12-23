@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Models;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,7 @@ public partial class GameController : MonoBehaviour
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
     public Dictionary<ItemContainer, Item> ItemContainerToitem;
     public Dictionary<Item, GameObject> planteditemsToGOs;
-    public Dictionary<string, ItemInfo> nameToItemInfo;
+    
 
     public GameObject moneyTextPrefab;
     public GameObject placeholderPrefab;
@@ -62,38 +63,11 @@ public partial class GameController : MonoBehaviour
         ItemContainerToitem = new Dictionary<ItemContainer, Item>();
 
         ItemControllers = new List<ItemController>();
-        InitalizeItemInfo();
-        CreateItemPrototypes();
+        ItemPrototype.InitializeObjects();
         CleanShelf();
         CreateShelf();
     }
-
-    private void InitalizeItemInfo()
-    {
-        nameToItemInfo = new Dictionary<string, ItemInfo>();
-
-        // For now we just use hardcoded names for Items
-        // e.g. Item 0, Item 1
-        for (int i = 0; i < 5; i++)
-            nameToItemInfo.Add("Computer" + i, new ItemInfo());
-    }
-
-    private void CreateItemPrototypes()
-    {
-        Item Item;
-        for (int i = 0; i < 5; i++)
-        {
-            Item = new Computer()
-            {
-                Name = "Computer" + i,
-                mps = i + 1,
-                requiredLevel = (2 * i + 1),
-                requiredMoneyForUpgrade = 30
-            };
-
-            nameToItemInfo["Computer" + i].item = Item;
-        }
-    }
+    
 
     // Maybe this method deserves a better name idk.
     private void FillItemInfo()

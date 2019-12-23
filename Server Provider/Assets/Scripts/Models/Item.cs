@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Item
+public abstract class Item:ICloneable
 {
     // Name of the server
     public string Name { get; set; }
@@ -29,10 +30,7 @@ public abstract class Item
     public event ItemEventsHandler Upgraded;
     public event ItemEventsHandler UpdateEvent;
 
-    public virtual Item Copy()
-    {
-        return (Item)MemberwiseClone();
-    }
+    
 
     // every second this server produces money
     public abstract int Produce();
@@ -55,4 +53,8 @@ public abstract class Item
     //we need to tell to upgradeable & plantable objects to what to do
     //Plant || Upgrade
     //does server need to know how to do this? how are we gonna do it? figure it out?
+    public object Clone()
+    {
+        return MemberwiseClone();
+    }
 }

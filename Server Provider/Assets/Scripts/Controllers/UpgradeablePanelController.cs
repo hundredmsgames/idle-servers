@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Models;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,12 +18,12 @@ public class UpgradeablePanelController : MonoBehaviour
     {
         if (Instance != null)
             return;
-
+//TODO:hghjgj
         Instance = this;
         itemToUpgradeContainer = new Dictionary<Item, GameObject>();
         GameController.Instance.LeveledUp += Player_LeveledUp;
 
-        foreach (ItemInfo itemInfo in GameController.Instance.nameToItemInfo.Values)
+        foreach (ItemInfo itemInfo in ItemPrototype.GetItemInfos())
         {
             Item proto = itemInfo.item;
 

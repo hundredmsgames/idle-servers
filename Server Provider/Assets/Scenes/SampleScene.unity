@@ -2891,7 +2891,8 @@ MonoBehaviour:
   money: 0
   levelProgress: 0
   level: 1
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 8834888243566853204, guid: e1f416a23f385cc49ab97bd24350aa3a,
+    type: 3}
   selecteditem: 
 --- !u!1 &1058362517
 GameObject:
@@ -4378,8 +4379,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UpgradesPanelAnimator: {fileID: 1274649195}
-  archivedItemsAnimator: {fileID: 0}
-  ItemManagamentAnimatorController: {fileID: 0}
+  archivedItemsAnimator: {fileID: 876189156}
+  ItemManagamentAnimatorController: {fileID: 73413296}
   CloseUpgradeablePanelButtonImage: {fileID: 1103679417}
   currentshelfpriceText: {fileID: 416673290}
   currentMoneyText: {fileID: 2124141841}
@@ -4387,7 +4388,7 @@ MonoBehaviour:
   filledImage: {fileID: 222635696}
   scrollRect: {fileID: 1183689798}
   dragEnabledScreen: {fileID: 1058362517}
-  ItemManagamentPanel: {fileID: 0}
+  ItemManagamentPanel: {fileID: 73413293}
 --- !u!1 &1551499860
 GameObject:
   m_ObjectHideFlags: 0
