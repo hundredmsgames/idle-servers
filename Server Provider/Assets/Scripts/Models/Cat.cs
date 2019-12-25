@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Computer : Item
+public class Cat : Item
 {
 
     public override void Upgrade()
     {
         currLevel++;
         mps += 1;
-        requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.1f);
+        requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.3f);
 
         if (currLevel > maxLevel)
         {
@@ -24,6 +24,11 @@ public class Computer : Item
     public override int Produce()
     {
         return mps;
+    }
+    public override void Update()
+    {
+        base.Update();
+
     }
 
     //we need to tell to upgradeable & plantable objects to what to do

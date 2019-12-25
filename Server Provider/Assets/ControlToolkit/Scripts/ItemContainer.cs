@@ -35,8 +35,6 @@ namespace ControlToolkit
         private bool m_interactable = true;
 
         private bool m_canDrag = true;
-        private bool m_canRemove = true;
-        private bool m_canAdd = false;
 
         public bool Interactable
         {
@@ -119,19 +117,6 @@ namespace ControlToolkit
             }
         }
 
-        public void AddClick()
-        {
-            if (!m_canAdd)
-            {
-                return;
-            }
-
-            if (Add != null)
-            {
-                Add(this, EventArgs.Empty);
-            }
-
-        }
 
         public void MoveTo(Vector3 position)
         {

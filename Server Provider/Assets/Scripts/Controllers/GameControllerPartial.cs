@@ -42,7 +42,7 @@ public partial class GameController : MonoBehaviour
                 if (itemContainer.hasItem == false)
                 {
                     Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
-                    image.sprite = Resources.Load<Sprite>("Images\\" + selecteditem);
+                    image.sprite = Resources.Load<Sprite>("Images\\Animals\\" + selecteditem);
                     image.color = new Color(0, 0, 0, 0.1f);
                     itemContainer.OnClick += ItemContainer_OnClick;
 
@@ -77,7 +77,7 @@ public partial class GameController : MonoBehaviour
 
         GameObject ItemGO = Instantiate(itemPrefab);
         ItemGO.transform.SetParent(ItemContainerToGO[container].transform, false);
-        ItemGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\" + selecteditem);
+        ItemGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\Animals\\" + selecteditem);
         ItemGO.GetComponentInChildren<TextMeshProUGUI>().text = selecteditem;
         //ItemGO.GetComponent<RectTransform>().rect.Set(0, 0, 0, 0);
         if (DebugConfigs.DEBUG_LOG)

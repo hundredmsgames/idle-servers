@@ -7,33 +7,6 @@ using System.Linq;
 
 namespace ControlToolkit
 {
-    public class ItemAddEventArgs : System.EventArgs
-    {
-        public int Index
-        {
-            get;
-            private set;
-        }
-
-        public ItemAddEventArgs(int index)
-        {
-            Index = index;
-        }
-    }
-
-    public class ItemRemovedEventArgs : System.EventArgs
-    {
-        public object Item
-        {
-            get;
-            private set;
-        }
-
-        public ItemRemovedEventArgs(object item)
-        {
-            Item = item;
-        }
-    }
 
     public class ItemDataBindingEventArgs : System.EventArgs
     {
@@ -49,18 +22,6 @@ namespace ControlToolkit
             private set;
         }
 
-        public bool CanRemove
-        {
-            get;
-            set;
-        }
-
-        public bool CanAdd
-        {
-            get;
-            set;
-        }
-
         public bool CanDrag
         {
             get;
@@ -72,8 +33,6 @@ namespace ControlToolkit
             Item = item;
             ItemPresenter = itemPresenter;
             CanDrag = true;
-            CanRemove = true;
-            CanAdd = false;
         }
     }
 
@@ -84,13 +43,10 @@ namespace ControlToolkit
         [SerializeField] GameObject ItemContainerPrefab;
         [SerializeField] AudioSource ItemDropSound;
         [SerializeField] AudioSource ItemAddSound;
-        [SerializeField] AudioSource ItemRemovedSound;
 
-        public event EventHandler<ItemAddEventArgs> ItemAdd;
         public event EventHandler<ItemDataBindingEventArgs> ItemDataBinding;
         public event EventHandler<ItemDataBindingEventArgs> EmptyDataBinding;
-        public event EventHandler<CancelEventArgs> ItemRemoving;
-        public event EventHandler<ItemRemovedEventArgs> ItemRemoved;
+
         public event EventHandler ItemsArranged;
 
         private ItemPlaceholder m_toPlaceholder;

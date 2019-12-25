@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Item:ICloneable
+public abstract class Item : ICloneable
 {
     // Name of the server
     public string Name { get; set; }
@@ -30,7 +30,9 @@ public abstract class Item:ICloneable
     public event ItemEventsHandler Upgraded;
     public event ItemEventsHandler UpdateEvent;
 
-    
+
+
+
 
     // every second this server produces money
     public abstract int Produce();

@@ -55,6 +55,7 @@ public class ItemController : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         item.Update();
         animationStarted = false;
         continuesTouchStarted = false;
+        AnimationsController.Instance.PlayItemAnimatons(this);
     }
 
 
