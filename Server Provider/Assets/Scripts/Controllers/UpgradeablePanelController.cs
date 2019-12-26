@@ -31,7 +31,7 @@ public class UpgradeablePanelController : MonoBehaviour
             upgradeableGO.transform.SetParent(parentObjectTransform, false);
             upgradeableGO.transform.Find("Name").GetComponent<TextMeshProUGUI>().text = proto.Name;
             upgradeableGO.transform.Find("Image").GetComponent<Image>().sprite = Resources.Load<Sprite>("Images\\Animals\\" + proto.Name);
-            Debug.Log(proto.Name);
+            // Debug.Log(proto.Name);
 
             Button btn = upgradeableGO.GetComponentInChildren<Button>();
             btn.onClick.AddListener(() => { Plant(proto.Name); });

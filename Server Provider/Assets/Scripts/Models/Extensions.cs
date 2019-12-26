@@ -25,6 +25,21 @@ public static class Extensions
 
         //return (num).ToString("0,#");
     }
+    /// <summary>
+    /// Gets an integer and calculates the hours and minutes based on seconds. Returns formatted string like 00:00:00
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <returns></returns>
+    public static string TimerFormat(this int seconds)
+    {
+        int hours, mins;
+        hours = seconds / 360;
+        seconds -= hours * 360;
+        mins = seconds / 60;
+        seconds -= mins * 60;
+
+        return string.Format("{0:00}:{1:00}:{2:00}", hours, mins, seconds);
+    }
 
     public static string RemoveTrailingZero(string num)
     {

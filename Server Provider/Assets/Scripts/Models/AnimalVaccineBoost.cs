@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FoodBoost : Booster
+public class AnimalVaccineBoost : Booster
 {
-    public FoodBoost() : base(BoosterType.Food)
+    public AnimalVaccineBoost() : base(BoosterType.AnimalVaccine)
     {
-        coolDown = 76;
-        usingTime = 10;
+        coolDown = 20;
+        usingTime = 5;
     }
 
     public override void Upgrade()
