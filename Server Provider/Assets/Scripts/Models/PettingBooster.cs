@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class PettingBooster : Booster
 {
+    bool finished = true;
+    int boostAmount = 30;
     public PettingBooster() : base(BoosterType.Petting)
     {
-        coolDown = 53;
+        coolDown = 60;
         usingTime = 10;
         Name = "Petting";
         Description = string.Format("Pets all the animals for {0} secs", usingTime);
@@ -18,7 +20,31 @@ public class PettingBooster : Booster
         base.Use();
         //what does this thing when we use it
         //effects some models maybe?
+        foreach (var item in GameController.Instance.planteditemsToGOs.Keys)
+        {
+            item.ApplyBoost(boostAmount);
+
+        }
+        finished = false;
     }
+    public override void Update(float deltaTime)
+    {
+        base.Update(deltaTime);
+        if (finished == true)
+            return;
+        if (CurrentUsingTime <= 0)
+        {
+            foreach (var item in GameController.Instance.planteditemsToGOs.Keys)
+            {
+                item.ApplyBoost(-boostAmount);
+
+            }
+            finished = true;
+        }
+
+
+    }
+
     public override void Upgrade()
     {
         base.Upgrade();

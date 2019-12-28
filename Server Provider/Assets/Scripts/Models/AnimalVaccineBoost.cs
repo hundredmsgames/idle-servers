@@ -6,8 +6,8 @@ public class AnimalVaccineBoost : Booster
 {
     public AnimalVaccineBoost() : base(BoosterType.AnimalVaccine)
     {
-        coolDown = 20;
-        usingTime = 5;
+        coolDown = 60;
+        usingTime = 0;
         Name = "Animal Vaccine";
         Description = "Vaccine the animals for instant 500 hearts.";
         Level = 1;
@@ -21,7 +21,7 @@ public class AnimalVaccineBoost : Booster
     public override void Use()
     {
         base.Use();
-
+        GameController.Instance.money += 1000;
         //does somethings when we use the booster with UI or game logic
     }
 }

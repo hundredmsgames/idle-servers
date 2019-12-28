@@ -27,6 +27,8 @@ public abstract class Item : ICloneable
     protected int maxLevel = 4;
 
 
+
+
     public delegate void ItemEventsHandler(Item item);
 
     public event ItemEventsHandler Planted;
@@ -54,7 +56,10 @@ public abstract class Item : ICloneable
         UpdateEvent?.Invoke(this);
     }
 
-
+    public void ApplyBoost(int boostAmount)
+    {
+        mps += boostAmount;
+    }
     //we need to tell to upgradeable & plantable objects to what to do
     //Plant || Upgrade
     //does server need to know how to do this? how are we gonna do it? figure it out?

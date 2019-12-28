@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class FoodBoost : Booster
 {
+    float time;
     public FoodBoost() : base(BoosterType.Food)
     {
         coolDown = 76;
@@ -11,6 +12,26 @@ public class FoodBoost : Booster
         Name = "Food and Water";
         Description = "Gives food and water.";
         Level = 1;
+    }
+    public override void Update(float deltaTime)
+    {
+        base.Update(deltaTime);
+
+        if (CurrentUsingTime > 0)
+        {
+            time += deltaTime;
+            if (time >= 0.1)
+            {
+                foreach (var item in GameController.Instance.planteditemsToGOs.Keys)
+                {
+                    GameController.Instance.ItemUpdate(item);
+
+                }
+                time = 0;
+            }
+        }
+
+
     }
 
     public override void Upgrade()

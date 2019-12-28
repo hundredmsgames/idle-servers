@@ -28,8 +28,8 @@ public partial class GameController : MonoBehaviour
     List<Item[]> shelves;
     List<ItemPlaceholder[]> itemPlaceholders;
 
-    public delegate void LevelHandler(int level);
-    public event LevelHandler LeveledUp;
+
+    public event Action<int> LeveledUp;
 
 
     // Start is called before the first frame update
@@ -45,8 +45,8 @@ public partial class GameController : MonoBehaviour
     public int level = 1;
 
     //whenever we use a power up we can set this multiplier to any power of 10
-    float levelProgressMultiplier = 10;
-    float levelProgressPerSecond = 0.01f;
+    float levelProgressMultiplier = 2;
+    float levelProgressPerSecond = 0.003f;
 
 
     private void OnEnable()
@@ -152,7 +152,7 @@ public partial class GameController : MonoBehaviour
         {
             level++;
             LeveledUp?.Invoke(level);
-            levelProgressMultiplier = 10 / level;
+            // levelProgressMultiplier = 50 / level;
             levelProgress = 0;
         }
     }
@@ -181,8 +181,9 @@ public partial class GameController : MonoBehaviour
 
     public void ItemUpdate(Item item)
     {
+        int amount = item.Produce();
         //earn money
-        money += item.Produce();
+        money += amount;
 
         // create a money text game object
         GameObject moneyTextGO = Instantiate(moneyTextPrefab);
@@ -190,7 +191,7 @@ public partial class GameController : MonoBehaviour
 
         moneyTextGO.transform.position = planteditemsToGOs[item as Item].transform.position + Vector3.up * 40f;
 
-        moneyTextGO.GetComponentInChildren<TextMeshProUGUI>().text = item.mps.ToString();
+        moneyTextGO.GetComponentInChildren<TextMeshProUGUI>().text = amount.ToString();
 
         //level progress
         //FIXME : 0.01 is hard coded turn it to a variable and change the value with power ups

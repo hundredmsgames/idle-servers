@@ -9,6 +9,7 @@ public partial class GameController : MonoBehaviour
 {
     public GameObject itemPrefab;
 
+
     // This is the selected Item to be planted.
     public string selecteditem;
 
@@ -37,12 +38,14 @@ public partial class GameController : MonoBehaviour
     {
         if (show == true)
         {
+            Sprite sprite = Resources.Load<Sprite>("Images\\Animals\\" + selecteditem);
             foreach (ItemContainer itemContainer in ItemContainerToGO.Keys)
             {
                 if (itemContainer.hasItem == false)
                 {
                     Image image = GameController.Instance.ItemContainerToGO[itemContainer].GetComponent<Image>();
-                    image.sprite = Resources.Load<Sprite>("Images\\Animals\\" + selecteditem);
+                    image.sprite = sprite;
+                    image.preserveAspect = true;
                     image.color = new Color(0, 0, 0, 0.1f);
                     itemContainer.OnClick += ItemContainer_OnClick;
 

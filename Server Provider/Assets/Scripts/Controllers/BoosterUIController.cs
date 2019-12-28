@@ -76,4 +76,14 @@ public class BoosterUIController : MonoBehaviour
         if (booster.State == BoosterState.Ready)
             booster.Use();
     }
+    public void ResetBoosters()
+    {
+        foreach (var item in Enum.GetNames(typeof(BoosterType)))
+        {
+            Booster booster = BoostersController.Instance.GetBoosterOfType((BoosterType)Enum.Parse(typeof(BoosterType), item));
+            if (booster != null)
+                booster.CurrentCoolDown = 0;
+
+        }
+    }
 }
