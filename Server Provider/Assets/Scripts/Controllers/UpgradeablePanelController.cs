@@ -8,10 +8,27 @@ using UnityEngine.UI;
 
 public class UpgradeablePanelController : MonoBehaviour
 {
+
+    /// <summary>
+    /// biz her plantable olanın plant edilip edilmediğini bilmek istiyor muyuz?
+    /// her item için bir limit olmalı  mı 🤔 
+    /// yapılacaklar
+    /// upgradeable panel içinde item leveli görüntülenecek
+    /// max levele ulaşan item için gerekli adımlar işlenecek.
+    /// 1) itemNameToActiveItem içinde item null yapılacak (null yapılınca button otomatik olarak plant işlemine dönecek )
+    /// 
+    /// </summary>
+
+
+
+
+
     public Transform parentObjectTransform;
     public GameObject upgradeablePrefab;
-    public Dictionary<Item, GameObject> itemToUpgradeContainer;
-    Item[] items;
+    public Dictionary<string, GameObject> itemNameToUpgradeContainer;
+    public Dictionary<string, Item> itemNameToActiveItem;
+
+
     public static UpgradeablePanelController Instance;
     // Start is called before the first frame update
     void Start()
@@ -20,7 +37,9 @@ public class UpgradeablePanelController : MonoBehaviour
             return;
         //TODO:hghjgj
         Instance = this;
-        itemToUpgradeContainer = new Dictionary<Item, GameObject>();
+        itemNameToUpgradeContainer = new Dictionary<string, GameObject>();
+        itemNameToActiveItem = new Dictionary<string, Item>();
+
         GameController.Instance.LeveledUp += Player_LeveledUp;
 
         foreach (ItemInfo itemInfo in ItemPrototype.GetItemInfos())
@@ -41,7 +60,9 @@ public class UpgradeablePanelController : MonoBehaviour
                 btn.gameObject.GetComponentInChildren<TextMeshProUGUI>().text = "Required Level " + proto.requiredLevel;
             }
 
-            itemToUpgradeContainer.Add(proto, upgradeableGO);
+            itemNameToUpgradeContainer.Add(proto.Name, upgradeableGO);
+            itemNameToActiveItem.Add(proto.Name, null);
+
 
             //we need to set behaviour of this upgradeable or plantable Item objects
             //for example is this object active?
@@ -53,19 +74,63 @@ public class UpgradeablePanelController : MonoBehaviour
             //bunun için mantıklı bir yöntem düşün
 
         }
-    }
 
+    }
+    private void Update()
+    {
+        foreach (string itemName in itemNameToActiveItem.Keys)
+        {
+            Button button = itemNameToUpgradeContainer[itemName].GetComponentInChildren<Button>();
+            if (ItemPrototype.GetItemInfo(itemName).item.requiredLevel > GameController.Instance.level)
+            {
+                button.interactable = false;
+                return;
+            }
+            Item item = itemNameToActiveItem[itemName];
+            //this means we can plant this but we did not do that yet
+            if (item == null)
+            {
+                if (ItemPrototype.GetItemInfo(itemName).item.requiredMoneyForPlant > GameController.Instance.money)
+                    button.interactable = false;
+                else
+                    button.interactable = true;
+            }
+            //this means we planted an item 
+            else
+            {
+                if (item.requiredMoneyForUpgrade > GameController.Instance.money)
+                {
+                    button.interactable = false;
+                }
+                else
+                {
+                    button.interactable = true;
+                }
+            }
+
+        }
+    }
     private void Player_LeveledUp(int level)
     {
-        foreach (Item item in itemToUpgradeContainer.Keys)
+        foreach (string itemName in itemNameToUpgradeContainer.Keys)
         {
-            if (item.requiredLevel <= GameController.Instance.level)
+            if (ItemPrototype.GetItemInfo(itemName).item.requiredLevel <= GameController.Instance.level)
             {
-                Button button = itemToUpgradeContainer[item].GetComponentInChildren<Button>();
-                if (button.interactable == false)
-                    button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Plant";
+                Button button = itemNameToUpgradeContainer[itemName].GetComponentInChildren<Button>();
+                if (itemNameToActiveItem[itemName] == null)
+                {
+                    int reqMoney = ItemPrototype.GetItemInfo(itemName).item.requiredMoneyForPlant;
+                    string plantInfo = "Plant\n" + (reqMoney > 0 ? Extensions.Format(reqMoney) : "");
+                    button.transform.GetComponentInChildren<TextMeshProUGUI>().text = plantInfo;
+                    button.onClick.RemoveAllListeners();
+                    button.onClick.AddListener(() => { Plant(itemName); });
 
+                }
+                else
+                    continue;
+                Debug.Log(itemName + ":" + (itemNameToActiveItem[itemName] == null));
                 button.interactable = true;
+
             }
         }
     }
@@ -87,17 +152,28 @@ public class UpgradeablePanelController : MonoBehaviour
     public void ItemPlanted(Item item)
     {
         //find the copied Item in the upgradeable panel
-        foreach (Item itemUpgradeable in itemToUpgradeContainer.Keys)
-        {
-            if (item.Name == itemUpgradeable.Name)
-            {
-                Button button = itemToUpgradeContainer[itemUpgradeable].GetComponentInChildren<Button>();
-                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(item.requiredMoneyForUpgrade);
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => { UpgradeItemButtonClicked(itemToUpgradeContainer[itemUpgradeable], item as Item); });
-            }
-        }
+
+        Button button = itemNameToUpgradeContainer[item.Name].GetComponentInChildren<Button>();
+        button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade\n" + Extensions.Format(item.requiredMoneyForUpgrade);
+        button.onClick.RemoveAllListeners();
+        button.onClick.AddListener(() => { UpgradeItemButtonClicked(itemNameToUpgradeContainer[item.Name], item); });
+
         item.Upgraded += ItemUpgraded;
+
+        GameController.Instance.money -= item.requiredMoneyForPlant;
+        //for second time to plant an item we will set the price to 0 in the proto
+        //ikinci kez aynı nesneyi plant etmek için bir ücret istemiyoruz(tartışmaya açık)
+        ItemPrototype.GetItemInfo(item.Name).item.requiredMoneyForPlant = 0;
+
+        //itemler startta isimleri ile ekleniyorlar
+        if (itemNameToActiveItem.ContainsKey(item.Name))
+        {
+            //her seferinde burada referans değişmeli. Biz bir item ekledik ve sonra onu son seviye yaptık.
+            //button tekrar plant olacak ve yeni bir item plant edeceğiz artık takip etmemiz gereken item o olacak
+            itemNameToActiveItem[item.Name] = item;
+        }
+        else
+            Debug.LogError("How did this happen?? This item should not be exist!!!");
     }
 
     private void UpgradeItemButtonClicked(object sender, Item item)
@@ -114,14 +190,11 @@ public class UpgradeablePanelController : MonoBehaviour
     private void ItemUpgraded(Item item)
     {
         Debug.Log("UpgradeablePanelController::ItemUpgraded");
-        foreach (Item itemUpgradeable in itemToUpgradeContainer.Keys)
-        {
-            if (item.Name == itemUpgradeable.Name)
-            {
-                Button button = itemToUpgradeContainer[itemUpgradeable].GetComponentInChildren<Button>();
-                button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(item.requiredMoneyForUpgrade);
-            }
-        }
+
+        Button button = itemNameToUpgradeContainer[item.Name].GetComponentInChildren<Button>();
+        button.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Upgrade \n" + Extensions.Format(item.requiredMoneyForUpgrade);
+
+
 
     }
 }

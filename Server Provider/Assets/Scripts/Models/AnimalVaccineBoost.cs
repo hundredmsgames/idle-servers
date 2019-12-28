@@ -8,6 +8,9 @@ public class AnimalVaccineBoost : Booster
     {
         coolDown = 20;
         usingTime = 5;
+        Name = "Animal Vaccine";
+        Description = "Vaccine the animals for instant 500 hearts.";
+        Level = 1;
     }
 
     public override void Upgrade()

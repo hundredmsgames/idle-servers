@@ -83,18 +83,18 @@ public partial class GameController : MonoBehaviour
         if (DebugConfigs.DEBUG_LOG)
             Debug.Log("Update event added to Item.");
 
+        ItemController ItemController = ItemGO.GetComponent<ItemController>();
         Item item = ItemPrototype.GetItemInfo(selecteditem).item.Clone() as Item;
         item.Planted += itemPlanted;
         item.Planted += UpgradeablePanelController.Instance.ItemPlanted;
-        item.UpdateEvent += Instance.ItemUpdate;
+        item.UpdateEvent += ItemUpdate;
+
         //planted eventları
         GameController.Instance.planteditemsToGOs[item] = ItemGO;
         GameController.Instance.ItemContainerToitem[container] = item;
         container.hasItem = true;
-        ItemController ItemController = ItemGO.GetComponent<ItemController>();
         ItemController.item = item as Item;
         ItemControllers.Add(ItemController);
-
         // After Item planted selected Item gets set to null so be carefull where you do this
         item.ItemPlanted();
 

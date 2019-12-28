@@ -5,7 +5,7 @@ namespace Models
 {
     public class ItemPrototype
     {
-        private static readonly Dictionary<string, ItemInfo> nameToItemInfo = new Dictionary<string, ItemInfo>();
+        private static Dictionary<string, ItemInfo> nameToItemInfo = new Dictionary<string, ItemInfo>();
 
         public static void AddToProtoList(string key, ItemInfo itemInfo)
         {
@@ -28,9 +28,10 @@ namespace Models
                 Item = new Cat()
                 {
                     Name = "Animal" + i,
-                    mps = i + 1,
+                    mps = i * 3 + 2,
                     requiredLevel = (2 * i + 1),
-                    requiredMoneyForUpgrade = 30
+                    requiredMoneyForUpgrade = 30 * (i + 1),
+                    requiredMoneyForPlant = i * 1000
                 };
 
                 GetItemInfo("Animal" + i).item = Item;

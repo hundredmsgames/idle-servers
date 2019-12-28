@@ -6,8 +6,11 @@ public class PettingBooster : Booster
 {
     public PettingBooster() : base(BoosterType.Petting)
     {
-        coolDown = 3;
-        usingTime = 0;
+        coolDown = 53;
+        usingTime = 10;
+        Name = "Petting";
+        Description = string.Format("Pets all the animals for {0} secs", usingTime);
+        Level = 1;
     }
 
     public override void Use()

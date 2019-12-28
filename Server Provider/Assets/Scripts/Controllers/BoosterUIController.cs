@@ -9,8 +9,12 @@ public class BoosterUIController : MonoBehaviour
 {
     [SerializeField]
     GameObject[] boosterUIObjects;
+    [SerializeField]
+    GameObject[] boosterUpgadeableUIObjects;
 
     Dictionary<BoosterType, GameObject> boosterType2UI;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +24,10 @@ public class BoosterUIController : MonoBehaviour
         boosterType2UI.Add(BoosterType.AnimalVaccine, boosterUIObjects[2]);
         Booster.OnStateChanged += Booster_OnStateChanged;
     }
+    public void SetConstantInfos()
+    {
 
+    }
     private void Booster_OnStateChanged(BoosterType boosterType, BoosterState boosterState)
     {
         GameObject boosterObject = boosterType2UI[boosterType];

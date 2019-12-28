@@ -8,8 +8,8 @@ public class Cat : Item
     public override void Upgrade()
     {
         currLevel++;
-        mps += 1;
-        requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.3f);
+        mps += 1 * currLevel;
+        requiredMoneyForUpgrade += (int)(requiredMoneyForUpgrade * 0.5f);
 
         if (currLevel > maxLevel)
         {

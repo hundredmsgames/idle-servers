@@ -35,7 +35,18 @@ public class GameUIController : MonoBehaviour
     {
         // FIXME: Probably we shouldn't update them in the update method.
         // They could be triggered by an event maybe
-        currentshelfpriceText.text = "Unluck " + Extensions.Format(GameController.Instance.shelfPrice);
+        if (GameController.Instance.shelfRequiredLevel > GameController.Instance.level)
+        {
+            currentshelfpriceText.text = "Requiered Level " + GameController.Instance.shelfRequiredLevel;
+            currentshelfpriceText.gameObject.transform.parent.GetComponent<Button>().interactable = false;
+            currentshelfpriceText.gameObject.transform.parent.GetChild(1).gameObject.SetActive(false);
+        }
+        else
+        {
+            currentshelfpriceText.gameObject.transform.parent.GetChild(1).gameObject.SetActive(true);
+            currentshelfpriceText.gameObject.transform.parent.GetComponent<Button>().interactable = true;
+            currentshelfpriceText.text = "Unluck " + Extensions.Format(GameController.Instance.shelfPrice);
+        }
         currentMoneyText.text = Extensions.Format(GameController.Instance.money);
         filledImage.fillAmount = GameController.Instance.levelProgress;
         currentLevel.text = "Level " + GameController.Instance.level.ToString();

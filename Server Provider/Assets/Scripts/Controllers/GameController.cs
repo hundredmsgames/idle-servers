@@ -15,7 +15,7 @@ public partial class GameController : MonoBehaviour
     public Dictionary<ItemContainer, GameObject> ItemContainerToGO;
     public Dictionary<ItemContainer, Item> ItemContainerToitem;
     public Dictionary<Item, GameObject> planteditemsToGOs;
-    
+
 
     public GameObject moneyTextPrefab;
     public GameObject placeholderPrefab;
@@ -39,12 +39,13 @@ public partial class GameController : MonoBehaviour
     //Game Logic Variables
     int shelfCount = 1;
     public int shelfPrice = 1000;
+    public int shelfRequiredLevel = 20;
     public int money = 0;
     public float levelProgress = 0;
     public int level = 1;
 
     //whenever we use a power up we can set this multiplier to any power of 10
-    float levelProgressMultiplier = 30;
+    float levelProgressMultiplier = 10;
     float levelProgressPerSecond = 0.01f;
 
 
@@ -66,8 +67,9 @@ public partial class GameController : MonoBehaviour
         ItemPrototype.InitializeObjects();
         CleanShelf();
         CreateShelf();
+        CreateShelf();
     }
-    
+
 
     // Maybe this method deserves a better name idk.
     private void FillItemInfo()
@@ -131,7 +133,9 @@ public partial class GameController : MonoBehaviour
         money = money - shelfPrice;
 
         // Update shelf price
-        shelfPrice += 1;
+        //TODO : this need to be a variable
+        shelfPrice += 1000;
+        shelfRequiredLevel += 20;
         shelfCount++;
 
         // https://answers.unity.com/questions/1276433/get-layoutgroup-and-contentsizefitter-to-update-th.html
@@ -140,7 +144,18 @@ public partial class GameController : MonoBehaviour
     }
 
     float time = 0f;
+    public void UpdateLevel()
+    {
+        levelProgress += levelProgressPerSecond * levelProgressMultiplier;
 
+        if (levelProgress >= 1)
+        {
+            level++;
+            LeveledUp?.Invoke(level);
+            levelProgressMultiplier = 10 / level;
+            levelProgress = 0;
+        }
+    }
     void Update()
     {
         time += Time.deltaTime;
@@ -155,17 +170,13 @@ public partial class GameController : MonoBehaviour
             foreach (Item Item in planteditemsToGOs.Keys)
             {
                 Item.Update();
+
             }
 
-            levelProgress += levelProgressPerSecond * levelProgressMultiplier;
-
-            if (levelProgress >= 1)
-            {
-                level++;
-                LeveledUp?.Invoke(level);
-                levelProgress = 0;
-            }
+            UpdateLevel();
         }
+
+
     }
 
     public void ItemUpdate(Item item)
@@ -183,7 +194,7 @@ public partial class GameController : MonoBehaviour
 
         //level progress
         //FIXME : 0.01 is hard coded turn it to a variable and change the value with power ups
-
+        UpdateLevel();
 
     }
 

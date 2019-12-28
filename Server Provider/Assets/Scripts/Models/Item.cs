@@ -21,8 +21,11 @@ public abstract class Item : ICloneable
     // Required money to make this server upgradable.
     public int requiredMoneyForUpgrade;
 
-    // (Maximum level that server can reach) - 1.
+    public int requiredMoneyForPlant;
+
+    // (Maximum level that item can reach) - 1.
     protected int maxLevel = 4;
+
 
     public delegate void ItemEventsHandler(Item item);
 
@@ -34,7 +37,7 @@ public abstract class Item : ICloneable
 
 
 
-    // every second this server produces money
+    // every second this item produces somthing
     public abstract int Produce();
     public virtual void Upgrade()
     {

@@ -8,6 +8,9 @@ public class FoodBoost : Booster
     {
         coolDown = 76;
         usingTime = 10;
+        Name = "Food and Water";
+        Description = "Gives food and water.";
+        Level = 1;
     }
 
     public override void Upgrade()
